@@ -32,6 +32,7 @@
 
 - [ ] YouTube 分類目前是 People & Blogs，應改為 Science & Technology / Education / How-to & Style 其中之一
 - [ ] 標籤欄位目前空白，建議補上同義詞／相關搜尋詞
+- [ ] YouTube 說明欄的 #說書 #讀書筆記 標籤與本片 SIT 技術內容不符，疑似其他 profile 的固定文字誤帶入，建議之後編輯說明欄時移除
 
 ## 延伸資源
 
