@@ -11,7 +11,7 @@
 
 | # | 標題 | 發布日期 | 對應 topic | YouTube |
 |---|---|---|---|---|
-| 1 | <實際選定的候選標題> | 2026-08-13 | `topics/2026-08-12_chouap-cloud-migration-sop/` | <影片連結> |
+| 1 | ChouAP.Cloud 上雲 SOP：把專案從本機搬成 GitHub + Claude Code Cloud 工作流 | 2026-08-13 | `topics/2026-08-12_chouap-cloud-migration-sop/` | https://www.youtube.com/watch?v=L16n_oDjXwQ |
 
 ## 這個系列的素材來源比較特別
 
