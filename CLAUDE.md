@@ -37,6 +37,13 @@
    - 只放文字／HTML 來源，**不放音檔或影片檔**
    - 待該主題的 YouTube 影片實際錄製、逐字稿產出後，`notebooklm_sources/` 的角色可視情況保留（作為原始素材存檔）或由逐字稿取代
 
+## `daily-tools/` — 每日工具挖掘候選池（獨立於 `topics/` 之外的頂層分類）
+
+- **不是 `topics/` 的子項目**：`daily-tools/<YYYY-MM-DD>_<slug>/source.md` 跟 `topics/` 是平行的頂層分類，不套用上面「新增主題的標準流程」那一套規則
+- **用途**：`daily-tool-digest` 自動化流程每日產出的候選工具介紹，作為 NotebookLM 音訊生成的原始素材
+- **屬性：輕量候選池，不是正式主題**——不需要 `README.md`、`youtube_metadata.md`、`social_posts.md`，也不需要回填 `_log/publish_log.md`
+- 一樣受本檔案「只放 Markdown」的總規範約束（見下方「內容規範」）
+
 ## `_log/publish_log.md` 是發布歷史的唯一真實來源
 
 - 每次新主題**發布完成**（YouTube 上架、social post 發出等動作），都要在 `_log/publish_log.md` 補一筆紀錄
