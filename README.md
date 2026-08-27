@@ -8,6 +8,7 @@ SIT 驗證與自動化實戰的公開紀錄庫 —— 技術工作 → GitHub �
 |---|---|---|---|---|
 | [三步驟搞定伺服器電壓量測：DSOX4024G 示波器接線與存檔實戰教學](topics/2026-08-04_dsox4024g-server-voltage-measurement/README.md) | 2026-08-04 | 教學 SOP | https://youtu.be/nFGo77bOH-w | 已發布 |
 | [ChouAP.Cloud 上雲 SOP：把專案從本機搬成 GitHub + Claude Code Cloud 工作流](topics/2026-08-12_chouap-cloud-migration-sop/README.md) | 2026-08-12 | 教學 SOP | https://www.youtube.com/watch?v=L16n_oDjXwQ | 已發布 |
+| [AI 股市週報自動化：GitHub Actions 觸發 + Claude 生成 + LINE 群組推播規劃](topics/2026-08-27_ai-stock-weekly-report-line-bot/README.md) | 2026-08-27 | 自動化工具 | | 草稿 |
 
 ## 結構
 
