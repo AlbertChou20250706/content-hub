@@ -54,6 +54,79 @@
 - 每次生成結果存成檔案（例如 `reports/YYYY-MM-DD.md`），commit 回自動化 repo，作為歷史紀錄與除錯依據。
 - 若當次流程失敗（資料源異常、API 呼叫失敗等），額外發一則 LINE 訊息通知自己，方便及時人工介入補跑。
 
+## 細部設計（第二輪規劃）
+
+以下是六段流程往下拆到可執行層級的細節，供之後實作時直接參考。
+
+### 資料層 Schema 設計
+
+週報用的結構化資料建議固定成以下 JSON 骨架，欄位寧可先少、之後再加：
+
+- 日期區間：本週一至週五收盤
+- 大盤指數：加權指數、櫃買指數的開盤／收盤／漲跌幅
+- 產業族群：漲幅 Top 5、跌幅 Top 5
+- （選配）成交值排行前 20 大個股
+- （選配）3-5 則財經頭條標題
+
+### Prompt 設計規則
+
+- **System prompt**：明確定位「週報撰寫助手，不是投資顧問」，避免 LLM 自行延伸出建議性語氣。
+- **User prompt**：帶入上述 JSON，要求輸出固定五段：市場總結 → 產業亮點 → 風險提示 → 下週觀察重點 → 免責聲明。
+- **免責聲明必須指定「逐字輸出、不可改寫」**：只寫「請附上免責聲明」不夠，LLM 有機率會意譯、換句話說，導致最終文字跟使用者要求的固定句子不一致。要在 prompt 裡明確要求原句照抄：
+
+  > 【投資一定有風險，基金/ETF/股票投資有賺有賠，以上資訊非投資建議】
+
+### LINE 訊息格式（分兩階段）
+
+1. **第一階段（先上線）**：純文字訊息＋emoji，先把整條流程跑通、驗證穩定。
+2. **第二階段（穩定後優化）**：LINE Flex Message 卡片，標題區／內容區／免責聲明區分開呈現，視覺更好。不需要一開始就做。
+
+### GitHub Actions Workflow 架構草案
+
+以下為實作時的參考草案（放在獨立自動化 repo，不是 content-hub）：
+
+```yaml
+name: weekly-stock-report
+on:
+  schedule:
+    - cron: '0 0 * * 1'   # UTC 週一 00:00 = 台灣週一 08:00
+  workflow_dispatch: {}
+jobs:
+  generate-and-send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python fetch_data.py
+      - env: { ANTHROPIC_API_KEY: "${{ secrets.ANTHROPIC_API_KEY }}" }
+        run: python generate_report.py
+      - env:
+          LINE_CHANNEL_ACCESS_TOKEN: "${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}"
+          LINE_GROUP_ID: "${{ secrets.LINE_GROUP_ID }}"
+        run: python send_line.py
+      - run: git add reports/ && git commit -m "weekly report" && git push
+      - if: failure()
+        run: python notify_failure.py
+```
+
+**重要**：每個安裝／執行步驟拆成獨立一行，不要用 `&&` 串成一條長鏈。這是 [ChouAP.Cloud 上雲 SOP](../../2026-08-12_chouap-cloud-migration-sop/README.md) 那篇已經踩過的雷——一步失敗、外層又有容錯把錯誤吞掉，會讓 Setup script／workflow 誤判成功，其實後面步驟根本沒執行。
+
+### 錯誤處理與重試
+
+- 資料抓取／LLM 呼叫失敗時允許重試 1-2 次（簡單的 exponential backoff）。
+- 任何步驟真的失敗就讓 workflow fail，用 `if: failure()` 額外發一則 LINE 訊息通知自己，不要讓錯誤靜默過去。
+
+### 安全與治理
+
+- 所有金鑰（Claude API Key、LINE Channel Access Token）只放 GitHub Secrets，不寫死在程式碼裡。
+- Group ID 雖非高敏感資訊，但建議一併放 Secrets，避免 hardcode 外洩被騷擾。
+- 留意 LINE Channel Access Token 是否為長效 token，定期檢查有效期並視需要更新。
+
+### 成本與額度評估
+
+- **GitHub Actions**：一週一次的用量，public repo 免費、private repo 額度也綽綽有餘。
+- **Claude API**：一週一次呼叫，token 用量小，成本可忽略。
+- **LINE Messaging API**：免費方案每月訊息則數有上限，一週一次遠低於門檻，但正式上線前建議實際查一次目前方案的確切數字。
+
 ## 架構分工原則
 
 - **自動化程式碼（GitHub Actions workflow、資料抓取腳本、LLM 呼叫邏輯）放在獨立的自動化 repo**，不放進 content-hub。這是因為 content-hub 的 `CLAUDE.md` 明確規定只放 Markdown 內容，禁止放程式碼／CI 工程邏輯（`.github/workflows/` 例外僅限於儲存庫生命週期的 LINE 通知，不含內容生成或爬蟲邏輯）。

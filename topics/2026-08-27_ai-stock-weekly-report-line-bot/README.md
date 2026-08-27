@@ -38,12 +38,14 @@
    - 前置作業：Bot 先被邀入目標群組，透過一次 webhook 事件取得 Group ID（只需做一次）
 6. **存檔層**：每次生成結果存成檔案（例如 `reports/YYYY-MM-DD.md`）commit 回自動化 repo，作為歷史紀錄與除錯依據；失敗時也發一則 LINE 訊息通知自己
 
-以上步驟目前都還沒有實際程式碼，屬於規劃內容，實作會在另一個獨立 repo 進行。
+以上步驟目前都還沒有實際程式碼，屬於規劃內容，實作會在另一個獨立 repo 進行。細部設計（資料 schema、prompt 規則、GitHub Actions workflow 草案、錯誤處理、安全與成本評估）見 [`notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md`](notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md)。
 
 ## 關鍵發現／重點
 
 - **LINE Notify 已停止服務**，這個方向一開始就要排除，直接規劃 LINE Messaging API + Bot channel + Group ID 的路線，避免走回頭路。
 - **免責聲明是固定成本，不是選配**：使用者明確要求「投資一定有風險，基金/ETF/股票投資有賺有賠，以上資訊非投資建議」必須出現在所有對外輸出（LINE 訊息、影片說明、social post），最保險的做法是寫進 AI 生成的 prompt 樣板，讓它變成每次輸出的固定結尾，而不是依賴人工事後補加。
+- **免責聲明要求 prompt 裡「逐字輸出、不可改寫」**：只交代「請附上免責聲明」不夠，LLM 有機率意譯換句話說，導致文字跟使用者要求的固定句子不一致。
+- **LINE 訊息格式分兩階段做**：先上純文字版本把整條流程跑通，穩定後再優化成 Flex Message 卡片，不用一開始就求視覺完美。
 - **自動化程式碼與內容紀錄要分兩個 repo**：GitHub Actions workflow、資料抓取腳本、LLM 呼叫邏輯屬於工程檔案，依 `CLAUDE.md` 規範不能放進 content-hub；content-hub 只負責事後把「怎麼做」寫成技術紀錄。
 - **免費資源的限制要提前抓好**：LINE Messaging API 免費方案每月訊息則數有上限、GitHub Actions（private repo）有分鐘數額度，週報一週一次的頻率下應該都在免費額度內，但要在正式上線前確認清楚。
 
@@ -53,15 +55,20 @@
 - [ ] 申請 LINE Bot（Messaging API channel），取得 Channel Access Token
 - [ ] 邀請 Bot 加入目標 LINE 群組，取得 Group ID
 - [ ] 選定股市資料來源並驗證資料品質（候選：FinMind／yfinance／TWSE OpenAPI）
-- [ ] 設計 Claude API 生成週報的 prompt 樣板，固定內嵌免責聲明
-- [ ] 設定 GitHub Actions：`schedule` + `workflow_dispatch`，並用 GitHub Secrets 管理金鑰
-- [ ] 實測完整流程（含失敗通知），穩定跑過幾週後再回來這裡錄 YouTube 教學、回填發布狀態
+- [ ] 定義結構化資料 JSON schema（大盤指數／產業族群漲跌／選配個股與新聞標題）
+- [ ] 設計 Claude API 生成週報的 prompt 樣板，固定內嵌免責聲明並要求逐字輸出
+- [ ] 先實作純文字版 LINE 訊息，穩定後再評估是否做 Flex Message 卡片
+- [ ] 設定 GitHub Actions：`schedule` + `workflow_dispatch`，每個步驟拆開寫（不要用 `&&` 串長鏈），並用 GitHub Secrets 管理金鑰
+- [ ] 加上失敗重試（1-2 次）與失敗通知機制
+- [ ] 確認 LINE Messaging API 免費方案的月訊息則數上限
+- [ ] 實測完整流程，穩定跑過幾週後再回來這裡錄 YouTube 教學、回填發布狀態
 
 ## 延伸資源
 
 - 相關 repo：（自動化實作 repo，待建立，尚無連結）
-- 相關文章／前作：本 repo [ChouAP.Cloud 上雲 SOP](../2026-08-12_chouap-cloud-migration-sop/README.md)（Cloud environment 建置方式可參考）
+- 相關文章／前作：本 repo [ChouAP.Cloud 上雲 SOP](../2026-08-12_chouap-cloud-migration-sop/README.md)（Cloud environment 建置方式與 Setup script 拆行寫法可參考）
 - 參考資料：LINE Messaging API 官方文件、LINE Notify 服務停止公告
+- 完整細部設計：[`notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md`](notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md)
 
 ---
 *此篇為 [content-hub](../../README.md) 系列紀錄之一。*
