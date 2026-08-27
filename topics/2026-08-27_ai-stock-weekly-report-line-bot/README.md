@@ -65,6 +65,14 @@
 - [ ] 整條流程在一對一測試環境跑穩定後，才邀請 Bot 加入正式的兩個目標群組（股市資訊資訊通、ETF討論區），取得對應 Group ID 並把 `LINE_PUSH_TARGET_IDS` 切換為正式版本
 - [ ] 實測正式群組發送無誤，穩定跑過幾週後再回來這裡錄 YouTube 教學、回填發布狀態
 
+## 排程總覽（三條自動化，每週一台灣時間依序發送）
+
+| 時間 | Repo | 內容 |
+|---|---|---|
+| 06:00 | `ai-stock-weekly-report-bot` | 台股週報 |
+| 07:00 | `stock-committee-bot` | 3706／00935／009816 委員會深度分析（3則） |
+| 07:30 | `ai-stock-weekly-report-bot` | 美股週報（S&P500／那斯達克／道瓊＋必看 NVDA、TSM ADR） |
+
 ## 衍生專案：AI 股市投資決策委員會（資料驅動版）
 
 在週報之外，另外把使用者過去手動設計的「三代理人委員會」提示詞產生器（`committee_prompt_generator.html`，手動複製貼到 claude.ai 那種）搬上雲端，獨立開一個 repo：[`stock-committee-bot`](https://github.com/AlbertChou20250706/stock-committee-bot)。
