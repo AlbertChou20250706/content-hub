@@ -14,7 +14,7 @@
 
 想做一個「每週自動產生 AI 股市週報，並發到 LINE 群組」的小工具，觸發方式希望借用 GitHub 的排程／手動觸發能力（`schedule` cron + `workflow_dispatch`），行為上類似目前用 Claude Code Cloud／cowork 那種「雲端上有東西在跑、隨時可以手動補跑一次」的體感，而不是自己顧一台常駐主機。
 
-這篇是**規劃階段**的技術紀錄：先把架構、流程、待確認事項寫清楚，實作程式碼會另外開一個獨立 repo（依本 repo `CLAUDE.md` 的內容規範，content-hub 只放 Markdown、不放程式碼／CI 工程邏輯），這裡只做飛輪的第一步——把技術規劃寫成文字紀錄。
+這篇是技術規劃紀錄：架構、流程、待確認事項寫在這裡，實作程式碼放在另一個獨立 repo（依本 repo `CLAUDE.md` 的內容規範，content-hub 只放 Markdown、不放程式碼／CI 工程邏輯）——[`ai-stock-weekly-report-bot`](https://github.com/AlbertChou20250706/ai-stock-weekly-report-bot)，目前已完成骨架（資料抓取、prompt 樣板、LINE 推播、GitHub Actions workflow），處於個人 LINE 帳號測試階段。
 
 **強制規範（不可省略）**：只要是這個自動化產出、對外發送或發布的任何內容（LINE 訊息、YouTube 說明欄、social post），都必須固定附上這句免責聲明：
 
@@ -38,7 +38,7 @@
    - 前置作業：Bot 先被邀入目標群組，透過一次 webhook 事件取得 Group ID（只需做一次）
 6. **存檔層**：每次生成結果存成檔案（例如 `reports/YYYY-MM-DD.md`）commit 回自動化 repo，作為歷史紀錄與除錯依據；失敗時也發一則 LINE 訊息通知自己
 
-以上步驟目前都還沒有實際程式碼，屬於規劃內容，實作會在另一個獨立 repo 進行。細部設計（資料 schema、prompt 規則、GitHub Actions workflow 草案、錯誤處理、安全與成本評估）見 [`notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md`](notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md)。
+以上六段流程已在 [`ai-stock-weekly-report-bot`](https://github.com/AlbertChou20250706/ai-stock-weekly-report-bot) 完成骨架實作（資料源選定 yfinance，尚未接上正式群組）。細部設計（資料 schema、prompt 規則、GitHub Actions workflow 草案、錯誤處理、安全與成本評估）見 [`notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md`](notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md)。
 
 ## 關鍵發現／重點
 
@@ -52,21 +52,22 @@
 ## 行動項（若有後續待辦）
 
 - [x] LINE Bot（Messaging API channel）已存在，直接沿用既有的「ChouAP.Cloud」channel 與已核發的 Channel Access Token，不需另外申請
-- [ ] 另開一個獨立的自動化 repo（工程程式碼與 CI 設定都放這裡，不放 content-hub）
-- [ ] 選定股市資料來源並驗證資料品質（候選：FinMind／yfinance／TWSE OpenAPI）
-- [ ] 定義結構化資料 JSON schema（大盤指數／產業族群漲跌／選配個股與新聞標題）
-- [ ] 設計 Claude API 生成週報的 prompt 樣板，固定內嵌免責聲明並要求逐字輸出
-- [ ] 先實作純文字版 LINE 訊息，穩定後再評估是否做 Flex Message 卡片
-- [ ] 設定 GitHub Actions：`schedule` + `workflow_dispatch`，每個步驟拆開寫（不要用 `&&` 串長鏈），並用 GitHub Secrets 管理金鑰
-- [ ] 加上失敗重試（1-2 次）與失敗通知機制
+- [x] 個人一對一測試（`curl`／PowerShell 手動 push）已驗證 Bot → 個人這條路可行；過程中一度在終端機截圖裡不慎露出 token，已重新核發並更新 `content-hub` 的 GitHub Secret
+- [x] 另開獨立自動化 repo：[`ai-stock-weekly-report-bot`](https://github.com/AlbertChou20250706/ai-stock-weekly-report-bot)（Public）
+- [x] 選定股市資料來源：yfinance（`config/watchlist.json` 可自行調整觀察清單，免改程式碼）
+- [x] 定義結構化資料 JSON schema 並實作 `src/fetch_data.py`
+- [x] 設計 Claude API 生成週報的 prompt 樣板（`prompts/system_prompt.md`），固定內嵌免責聲明並要求逐字輸出，程式碼端（`src/generate_report.py`）也加了一層防呆：若模型輸出漏掉免責聲明會自動補上
+- [x] 實作純文字版 LINE 推播（`src/send_line.py`），Flex Message 卡片留待穩定後再評估
+- [x] 設定 GitHub Actions `weekly-stock-report.yml`：`schedule` + `workflow_dispatch`，每個步驟拆開寫，金鑰走 GitHub Secrets
+- [x] 加上失敗通知機制（`src/notify_failure.py`）；失敗重試目前只有 Claude SDK 內建的自動重試，`fetch_data.py`／`send_line.py` 尚未加自訂重試邏輯
 - [ ] 確認 LINE Messaging API 免費方案的月訊息則數上限
-- [ ] **開發／測試階段先用「自己與 Bot 的一對一聊天」驗證 push message**（用個人 User ID，不用 Group ID），避免測試雜訊發到正式群組
-- [ ] 整條流程（資料→生成→格式化→發送→存檔）在一對一測試環境跑穩定後，才邀請 Bot 加入正式的兩個目標群組（股市資訊資訊通、ETF討論區），取得對應 Group ID 並切換為正式版本
+- [ ] 在 `ai-stock-weekly-report-bot` repo 設定 GitHub Secrets（`ANTHROPIC_API_KEY`、`LINE_CHANNEL_ACCESS_TOKEN`、`LINE_PUSH_TARGET_IDS`＝個人 User ID），手動觸發 `workflow_dispatch` 跑一次端對端測試
+- [ ] 整條流程在一對一測試環境跑穩定後，才邀請 Bot 加入正式的兩個目標群組（股市資訊資訊通、ETF討論區），取得對應 Group ID 並把 `LINE_PUSH_TARGET_IDS` 切換為正式版本
 - [ ] 實測正式群組發送無誤，穩定跑過幾週後再回來這裡錄 YouTube 教學、回填發布狀態
 
 ## 延伸資源
 
-- 相關 repo：（自動化實作 repo，待建立，尚無連結）
+- 相關 repo：[`ai-stock-weekly-report-bot`](https://github.com/AlbertChou20250706/ai-stock-weekly-report-bot)（自動化實作）
 - 相關文章／前作：本 repo [ChouAP.Cloud 上雲 SOP](../2026-08-12_chouap-cloud-migration-sop/README.md)（Cloud environment 建置方式與 Setup script 拆行寫法可參考）
 - 參考資料：LINE Messaging API 官方文件、LINE Notify 服務停止公告
 - 完整細部設計：[`notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md`](notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md)
