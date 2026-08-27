@@ -81,6 +81,15 @@
 1. **第一階段（先上線）**：純文字訊息＋emoji，先把整條流程跑通、驗證穩定。
 2. **第二階段（穩定後優化）**：LINE Flex Message 卡片，標題區／內容區／免責聲明區分開呈現，視覺更好。不需要一開始就做。
 
+### Bot 與群組導入策略（分階段，先不動正式群組）
+
+- **Bot 沿用既有帳號**：不需要新申請 Provider／Channel，直接沿用既有的「ChouAP.Cloud」Messaging API channel 與已核發的 Channel Access Token（此 token 目前已用於 content-hub 的 `line-pr-notify.yml` workflow，做 PR 建立／合併的 broadcast 通知）。broadcast 與 push-to-group 是同一組 token、不同 API，兩種用途互不衝突。
+- **開發／測試階段**：先用「自己與 Bot 的一對一聊天」驗證 push message（帶自己的 **User ID**，不是 Group ID），把資料抓取→AI 生成→格式化→發送→存檔整條流程跑穩定，包含免責聲明逐字輸出的驗證。這階段完全不用碰任何正式群組。
+- **正式導入階段（最後一步）**：確認整條流程沒問題後，才把 Bot 邀進兩個既有的正式目標群組——「股市資訊資訊通」與「ETF討論區」（這兩個群組原本就有人工丟 AI 股市分析內容進去，屬於既有受眾）。
+  - Bot 帳號的「接受邀請加入群組或多人聊天室」已在 LINE Official Account Manager 確認開啟，可直接被邀請。
+  - 兩個群組要**一次邀請一個**，各自觸發一次事件、各自抓一次 Group ID，避免兩組 ID 搞混；記得標註清楚哪組 ID 對應哪個群組。
+  - 若週報要同時發到兩個群組，正式程式碼就是對這兩個 Group ID 各呼叫一次 push API。
+
 ### GitHub Actions Workflow 架構草案
 
 以下為實作時的參考草案（放在獨立自動化 repo，不是 content-hub）：

@@ -51,9 +51,8 @@
 
 ## 行動項（若有後續待辦）
 
+- [x] LINE Bot（Messaging API channel）已存在，直接沿用既有的「ChouAP.Cloud」channel 與已核發的 Channel Access Token，不需另外申請
 - [ ] 另開一個獨立的自動化 repo（工程程式碼與 CI 設定都放這裡，不放 content-hub）
-- [ ] 申請 LINE Bot（Messaging API channel），取得 Channel Access Token
-- [ ] 邀請 Bot 加入目標 LINE 群組，取得 Group ID
 - [ ] 選定股市資料來源並驗證資料品質（候選：FinMind／yfinance／TWSE OpenAPI）
 - [ ] 定義結構化資料 JSON schema（大盤指數／產業族群漲跌／選配個股與新聞標題）
 - [ ] 設計 Claude API 生成週報的 prompt 樣板，固定內嵌免責聲明並要求逐字輸出
@@ -61,7 +60,9 @@
 - [ ] 設定 GitHub Actions：`schedule` + `workflow_dispatch`，每個步驟拆開寫（不要用 `&&` 串長鏈），並用 GitHub Secrets 管理金鑰
 - [ ] 加上失敗重試（1-2 次）與失敗通知機制
 - [ ] 確認 LINE Messaging API 免費方案的月訊息則數上限
-- [ ] 實測完整流程，穩定跑過幾週後再回來這裡錄 YouTube 教學、回填發布狀態
+- [ ] **開發／測試階段先用「自己與 Bot 的一對一聊天」驗證 push message**（用個人 User ID，不用 Group ID），避免測試雜訊發到正式群組
+- [ ] 整條流程（資料→生成→格式化→發送→存檔）在一對一測試環境跑穩定後，才邀請 Bot 加入正式的兩個目標群組（股市資訊資訊通、ETF討論區），取得對應 Group ID 並切換為正式版本
+- [ ] 實測正式群組發送無誤，穩定跑過幾週後再回來這裡錄 YouTube 教學、回填發布狀態
 
 ## 延伸資源
 
