@@ -60,14 +60,23 @@
 - [x] 實作純文字版 LINE 推播（`src/send_line.py`），Flex Message 卡片留待穩定後再評估
 - [x] 設定 GitHub Actions `weekly-stock-report.yml`：`schedule` + `workflow_dispatch`，每個步驟拆開寫，金鑰走 GitHub Secrets
 - [x] 加上失敗通知機制（`src/notify_failure.py`）；失敗重試目前只有 Claude SDK 內建的自動重試，`fetch_data.py`／`send_line.py` 尚未加自訂重試邏輯
+- [x] 在 `ai-stock-weekly-report-bot` repo 設定 GitHub Secrets（`ANTHROPIC_API_KEY`、`LINE_CHANNEL_ACCESS_TOKEN`、`LINE_PUSH_TARGET_IDS`＝個人 User ID），手動觸發 `workflow_dispatch` 端對端測試成功（資料抓取→Claude生成→LINE推播→自動存檔全部跑通）
 - [ ] 確認 LINE Messaging API 免費方案的月訊息則數上限
-- [ ] 在 `ai-stock-weekly-report-bot` repo 設定 GitHub Secrets（`ANTHROPIC_API_KEY`、`LINE_CHANNEL_ACCESS_TOKEN`、`LINE_PUSH_TARGET_IDS`＝個人 User ID），手動觸發 `workflow_dispatch` 跑一次端對端測試
 - [ ] 整條流程在一對一測試環境跑穩定後，才邀請 Bot 加入正式的兩個目標群組（股市資訊資訊通、ETF討論區），取得對應 Group ID 並把 `LINE_PUSH_TARGET_IDS` 切換為正式版本
 - [ ] 實測正式群組發送無誤，穩定跑過幾週後再回來這裡錄 YouTube 教學、回填發布狀態
 
+## 衍生專案：AI 股市投資決策委員會（資料驅動版）
+
+在週報之外，另外把使用者過去手動設計的「三代理人委員會」提示詞產生器（`committee_prompt_generator.html`，手動複製貼到 claude.ai 那種）搬上雲端，獨立開一個 repo：[`stock-committee-bot`](https://github.com/AlbertChou20250706/stock-committee-bot)。
+
+- 必看代號（3706 神達、00935 野村臺灣新科技50、009816 凱基台灣TOP50）與比較組寫在 `config/must_watch.json`，可擴充
+- 關鍵差異：RS 動能報酬率、止損價、部位規模這些數字**改由程式碼實際抓歷史股價計算**，不再讓 Claude 憑空估算，Claude 只負責論述與決策文字
+- 原本的手動 HTML 工具保留在該 repo 的 `manual-tool/` 下，作為臨時查任意標的用的 ad hoc 工具
+- 跟 `ai-stock-weekly-report-bot` 共用同一個 LINE Bot（ChouAP.Cloud）與 Claude API key 概念，各自獨立的 repo／Secrets
+
 ## 延伸資源
 
-- 相關 repo：[`ai-stock-weekly-report-bot`](https://github.com/AlbertChou20250706/ai-stock-weekly-report-bot)（自動化實作）
+- 相關 repo：[`ai-stock-weekly-report-bot`](https://github.com/AlbertChou20250706/ai-stock-weekly-report-bot)（週報自動化）、[`stock-committee-bot`](https://github.com/AlbertChou20250706/stock-committee-bot)（委員會深度分析自動化）
 - 相關文章／前作：本 repo [ChouAP.Cloud 上雲 SOP](../2026-08-12_chouap-cloud-migration-sop/README.md)（Cloud environment 建置方式與 Setup script 拆行寫法可參考）
 - 參考資料：LINE Messaging API 官方文件、LINE Notify 服務停止公告
 - 完整細部設計：[`notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md`](notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md)
