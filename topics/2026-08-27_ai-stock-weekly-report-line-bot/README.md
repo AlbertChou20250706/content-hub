@@ -45,9 +45,12 @@
 - **LINE Notify 已停止服務**，這個方向一開始就要排除，直接規劃 LINE Messaging API + Bot channel + Group ID 的路線，避免走回頭路。
 - **免責聲明是固定成本，不是選配**：使用者明確要求「投資一定有風險，基金/ETF/股票投資有賺有賠，以上資訊非投資建議」必須出現在所有對外輸出（LINE 訊息、影片說明、social post），最保險的做法是寫進 AI 生成的 prompt 樣板，讓它變成每次輸出的固定結尾，而不是依賴人工事後補加。
 - **免責聲明要求 prompt 裡「逐字輸出、不可改寫」**：只交代「請附上免責聲明」不夠，LLM 有機率意譯換句話說，導致文字跟使用者要求的固定句子不一致。
-- **LINE 訊息格式分兩階段做**：先上純文字版本把整條流程跑通，穩定後再優化成 Flex Message 卡片，不用一開始就求視覺完美。
+- **LINE 訊息格式分兩階段做**：先上純文字版本把整條流程跑通，穩定後再優化成 Flex Message 卡片；三條自動化目前都已完成第二階段（見下方「視覺升級」）。
 - **自動化程式碼與內容紀錄要分兩個 repo**：GitHub Actions workflow、資料抓取腳本、LLM 呼叫邏輯屬於工程檔案，依 `CLAUDE.md` 規範不能放進 content-hub；content-hub 只負責事後把「怎麼做」寫成技術紀錄。
 - **免費資源的限制要提前抓好**：LINE Messaging API 免費方案每月訊息則數有上限、GitHub Actions（private repo）有分鐘數額度，週報一週一次的頻率下應該都在免費額度內，但要在正式上線前確認清楚。
+- **`.TW` 後綴會被 LINE 誤判成網域名稱**：純文字訊息裡寫「3706.TW」會被自動轉成一個點了會壞掉的連結（`.TW` 是真實的國別頂級域名），三個 repo 的股票代號顯示都改成去掉交易所後綴。
+- **Claude API 的 web_search 允許網域清單，網域可能突然連不上**：`allowed_domains` 裡只要有一個網域當下對 Anthropic 的爬蟲不可達，整個請求會直接 400 失敗（不是只有那個網域的搜尋失敗），實測就在美股週報上踩到（`marketwatch.com`／`reuters.com`／`wsj.com` 一度回報不可達）。三個 repo 的週報／委員會生成程式都加了「retry without web_search」的防呆，網域失效時報告仍會照常送出（只是少了新聞連結），不會整篇開天窗。
+- **法人買賣超等真實數據要注意發布時機，不是查不到就代表程式有 bug**：TWSE 三大法人 T86 報表要等收盤後才會公布（約台灣時間下午 3 點後），在交易時段內手動測試會查到「沒有符合條件的資料」，屬預期行為而非程式錯誤；程式端已設計成查無資料就整段省略，不會編造數字。
 
 ## 行動項（若有後續待辦）
 
@@ -61,17 +64,23 @@
 - [x] 設定 GitHub Actions `weekly-stock-report.yml`：`schedule` + `workflow_dispatch`，每個步驟拆開寫，金鑰走 GitHub Secrets
 - [x] 加上失敗通知機制（`src/notify_failure.py`）；失敗重試目前只有 Claude SDK 內建的自動重試，`fetch_data.py`／`send_line.py` 尚未加自訂重試邏輯
 - [x] 在 `ai-stock-weekly-report-bot` repo 設定 GitHub Secrets（`ANTHROPIC_API_KEY`、`LINE_CHANNEL_ACCESS_TOKEN`、`LINE_PUSH_TARGET_IDS`＝個人 User ID），手動觸發 `workflow_dispatch` 端對端測試成功（資料抓取→Claude生成→LINE推播→自動存檔全部跑通）
+- [x] 新增美股週報（`ai-stock-weekly-report-bot`，S&P500／那斯達克／道瓊＋必看 NVDA、TSM ADR），與台股週報共用同一支 `send_line.py`
+- [x] 視覺升級：台股週報、美股週報、委員會報告三條自動化都改成 **LINE Flex Message 卡片 + 真實 K 線圖**（`mplfinance` 依 yfinance 實際 OHLC 資料繪製，非 AI 畫圖），並依可信度限制 `web_search` 只能引用官方／主流財經網站
+- [x] 台股週報、委員會報告加上真實三大法人（外資／投信／自營）買賣超表格，直接查 TWSE 官方 T86 端點取得，非模型估算；查無資料就整段省略
+- [x] 修掉 `web_search` 允許網域清單一旦有網域連不上就整篇報告開天窗的問題：加上「retry without web_search」防呆，三條自動化都已套用並實測通過
 - [ ] 確認 LINE Messaging API 免費方案的月訊息則數上限
 - [ ] 整條流程在一對一測試環境跑穩定後，才邀請 Bot 加入正式的兩個目標群組（股市資訊資訊通、ETF討論區），取得對應 Group ID 並把 `LINE_PUSH_TARGET_IDS` 切換為正式版本
 - [ ] 實測正式群組發送無誤，穩定跑過幾週後再回來這裡錄 YouTube 教學、回填發布狀態
 
-## 排程總覽（三條自動化，每週一台灣時間依序發送）
+## 排程總覽（三條自動化，台灣時間依序發送）
 
 | 時間 | Repo | 內容 |
 |---|---|---|
 | 06:00 | `ai-stock-weekly-report-bot` | 台股週報 |
 | 07:00 | `stock-committee-bot` | 3706／00935／009816 委員會深度分析（3則） |
 | 07:30 | `ai-stock-weekly-report-bot` | 美股週報（S&P500／那斯達克／道瓊＋必看 NVDA、TSM ADR） |
+
+> 測試期間三個排程暫時都改成**每天**發送（cron 每日觸發），方便快速抓問題；待使用者確認沒有其他狀況後，再改回原定的每週一。
 
 ## 衍生專案：AI 股市投資決策委員會（資料驅動版）
 
@@ -81,6 +90,7 @@
 - 關鍵差異：RS 動能報酬率、止損價、部位規模這些數字**改由程式碼實際抓歷史股價計算**，不再讓 Claude 憑空估算，Claude 只負責論述與決策文字
 - 原本的手動 HTML 工具保留在該 repo 的 `manual-tool/` 下，作為臨時查任意標的用的 ad hoc 工具
 - 跟 `ai-stock-weekly-report-bot` 共用同一個 LINE Bot（ChouAP.Cloud）與 Claude API key 概念，各自獨立的 repo／Secrets
+- 每個標的一則獨立的 LINE Flex Message，內含真實 K 線圖（該標的近三個月走勢）、RS 濾網結果、比較組相對強弱、量化風控數據表，以及查 TWSE T86 端點取得的三大法人買賣超（查無資料就整段省略，不編造）
 
 ## 延伸資源
 
