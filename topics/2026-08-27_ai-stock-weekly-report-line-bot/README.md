@@ -79,8 +79,9 @@
 | 06:00 | `ai-stock-weekly-report-bot` | 台股週報 |
 | 07:00 | `stock-committee-bot` | 3706／00935／009816 委員會深度分析（3則） |
 | 07:30 | `ai-stock-weekly-report-bot` | 美股週報（S&P500／那斯達克／道瓊＋必看 NVDA、TSM ADR） |
+| 每月 1 日 08:00 | `quality-picks-bot` | 台股／美股優質個股＋ETF 前 3 名推薦 |
 
-> 測試期間三個排程暫時都改成**每天**發送（cron 每日觸發），方便快速抓問題；待使用者確認沒有其他狀況後，再改回原定的每週一。
+> 測試期間前三個排程暫時都改成**每天**發送（cron 每日觸發），方便快速抓問題；待使用者確認沒有其他狀況後，再改回原定的每週一。`quality-picks-bot` 因為看的是變化緩慢的基本面數據，一開始就設計成每月一次。
 
 ## 衍生專案：AI 股市投資決策委員會（資料驅動版）
 
@@ -92,9 +93,19 @@
 - 跟 `ai-stock-weekly-report-bot` 共用同一個 LINE Bot（ChouAP.Cloud）與 Claude API key 概念，各自獨立的 repo／Secrets
 - 每個標的一則獨立的 LINE Flex Message，內含真實 K 線圖（該標的近三個月走勢）、RS 濾網結果、比較組相對強弱、量化風控數據表，以及查 TWSE T86 端點取得的三大法人買賣超（查無資料就整段省略，不編造）
 
+## 衍生專案二：優質標的推薦（quality-picks-bot）
+
+前兩個自動化看的都是**價格動能**（週漲跌、RS 動能），使用者後續加碼希望再有一份「台股／美股優質個股＋ETF 推薦」，看的是**基本面品質**，因此又獨立開一個 repo：[`quality-picks-bot`](https://github.com/AlbertChou20250706/quality-picks-bot)。
+
+- 候選池：台股個股／台股 ETF／美股個股／美股 ETF 各 6～8 檔知名龍頭與主流 ETF（非全市場掃描，免費 API＋GitHub Actions 排程架構下不現實），程式依量化公式排序取前 3 名
+- 篩選公式：個股＝0.35×ROE + 0.25×營益率(或毛利率) + 0.20×自由現金流為正 + 0.20×股利品質；ETF＝0.5×資產規模 + 0.5×(1－費用率)，每項先在候選池內做標準化，缺資料的欄位得分視為 0（不用平均值猜測，避免獎勵缺資料的標的）
+- 排序結果由程式決定，Claude 只負責引用程式算好的數字說明「為什麼夠格」，不能重新排序、不能自己推薦排序外的標的
+- 不涵蓋共同基金：Sharpe 值／Alpha／最大回撤／4433 排名目前沒有已驗證的免費資料源，暫不做
+- 首次上線實測（2026-08-28）確認 yfinance 對候選池內的台股／美股標的財報數據（ROE、毛利率、自由現金流、ETF 費用率／規模）涵蓋度良好，數字與已知公開資訊量級相符（如台積電 ROE ≈ 40%、Mastercard ROE 因高額庫藏股導致帳面淨值極低而異常偏高等，均為真實財報特性、非資料異常）
+
 ## 延伸資源
 
-- 相關 repo：[`ai-stock-weekly-report-bot`](https://github.com/AlbertChou20250706/ai-stock-weekly-report-bot)（週報自動化）、[`stock-committee-bot`](https://github.com/AlbertChou20250706/stock-committee-bot)（委員會深度分析自動化）
+- 相關 repo：[`ai-stock-weekly-report-bot`](https://github.com/AlbertChou20250706/ai-stock-weekly-report-bot)（週報自動化）、[`stock-committee-bot`](https://github.com/AlbertChou20250706/stock-committee-bot)（委員會深度分析自動化）、[`quality-picks-bot`](https://github.com/AlbertChou20250706/quality-picks-bot)（優質標的推薦，每月一次）
 - 相關文章／前作：本 repo [ChouAP.Cloud 上雲 SOP](../2026-08-12_chouap-cloud-migration-sop/README.md)（Cloud environment 建置方式與 Setup script 拆行寫法可參考）
 - 參考資料：LINE Messaging API 官方文件、LINE Notify 服務停止公告
 - 完整細部設計：[`notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md`](notebooklm_sources/AI_STOCK_WEEKLY_REPORT_LINE_BOT_PLAN.md)
