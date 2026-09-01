@@ -7,3 +7,4 @@
 | 2026-08-11 | 三步驟搞定伺服器電壓量測：DSOX4024G 示波器接線與存檔實戰教學 | content-hub 主題頁建立並回填 | https://youtu.be/nFGo77bOH-w | YouTube 影片實際發布於 2026-08-04；本篇為 content-hub 首輪內容，反向回填 |
 | 2026-08-12 | ChouAP.Cloud 上雲 SOP：把專案從本機搬成 GitHub + Claude Code Cloud 工作流 | content-hub 主題頁建立 | topics/2026-08-12_chouap-cloud-migration-sop/README.md | GitHub 文字紀錄先行發布；YouTube 影片與 social post 待錄製、待發 |
 | 2026-08-13 | ChouAP.Cloud 上雲 SOP：把專案從本機搬成 GitHub + Claude Code Cloud 工作流 | YouTube 上架，主題索引與系列集數表回填 | https://www.youtube.com/watch?v=L16n_oDjXwQ | 狀態由草稿改為已發布；同步更新根目錄 README 與 series/claude-code-cloud-dev/README.md |
+| 2026-08-27 | AI 股市週報自動化：GitHub Actions 觸發 + Claude 生成 + LINE 群組推播規劃 | content-hub 主題頁建立 | topics/2026-08-27_ai-stock-weekly-report-line-bot/README.md | GitHub 文字紀錄先行建立；目前為技術規劃階段，尚未開始實作，YouTube 影片與 social post 待發布 |
