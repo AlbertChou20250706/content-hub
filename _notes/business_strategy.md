@@ -47,3 +47,28 @@
 - **初期不需要**獨立網站，先用既有 GitHub Pages 作品集（Albert-Pyahaw）撐住展示＋導流角色
 - 等真的要做「付款＋授權管理」，優先接現成的 Gumroad／LemonSqueezy／Stripe Payment Link，不必自建整站
 - 等規模夠大、需要自己的品牌落地頁時，再考慮自建
+
+## 執行順序建議
+
+不要一次把所有 repo 都拆開，先挑一個小工具（如 `OT_Calc_Launcher`）當試點：走一次「公開展示 repo ＋ 私有原始碼 repo ＋ 買斷加 collaborator」完整流程，跑通後再套用到其他 repo。
+
+## 每日小工具素材（本機路徑）
+
+- 素材來源：本機／Google 雲端硬碟 `G:\我的雲端硬碟\產品上架(Product Release Pipeline)\Scrip_application`，收集程式碼量較少的小工具，比照 `daily-tools/` 現有作法每天固定時間（構想 05:40）發一篇
+- **限制**：Claude Code cloud session 存取不到本機 `G:\` 路徑，且依 `CLAUDE.md` 規範，content-hub 這個 repo 本身**不能**放抓取／生成邏輯的自動化（`.github/workflows/` 僅允許 LINE 通知用途）
+- 這件事的正確歸屬是**擴充 `daily-tool-digest`**（獨立的自動化專案）的來源清單，讓它去讀 `Scrip_application` 底下的小工具、產生候選、定時 commit 產出的 Markdown 進 `content-hub/daily-tools/`；content-hub 只接收成品，不跑抓取邏輯
+
+### daily-tools 呈現方式
+
+- **GitHub Pages**（沿用既有作品集站 Albert-Pyahaw）：做一個輕量「工具圖鑑」頁，每個工具一張卡片（縮圖＋一句話痛點＋連結），比純 Markdown 列表更有瀏覽感
+- **YouTube Shorts**：60 秒內展示工具操作畫面，日更量產成本最低，適合「每天一支」的節奏
+- GitHub／`daily-tools/` 本身仍當 SEO 錨點與 NotebookLM 音訊來源，這層不變
+
+### 吸引觀眾注意力的原則
+
+- 標題走**痛點／成果導向**，不走功能描述（例如「這支工具幫我省了 2 小時排查」優於「XX 監控工具介紹」）
+- **前 3 秒先給結果**（Before/After 畫面），原理放後面
+- **固定時間發布**做成儀式感，05:40 本身就可以變成品牌記憶點（例如「晨間工具站」）
+- **縮圖／封面統一視覺模板**（同色系、同字體），累積出一致的品牌辨識度
+- 短影音為主、長影音為輔，短影音負責導流
+- **結尾留互動鉤子**（提問、邀請留言分享你在用的工具），拉高互動率
