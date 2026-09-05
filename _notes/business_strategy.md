@@ -91,9 +91,15 @@ Microsoft Store（實際下載／付費頁面）
 
 不會。Microsoft Store 沒有「上架滿多久自動下架」的機制，只有**違反政策**或**認證抽查不合格**時才會被要求修正或移除。真正會過期的是簽章憑證本身（現行規定最長 1 年，需年年續約），但只要簽名時有加 **timestamp**，就算憑證過期，已發布的舊版本 exe 依然會被系統信任，不影響既有用戶。
 
+## 品牌名稱：Biahal（已拍板）
+
+- 個人／產品品牌統一定名為 **Biahal**
+- 視覺識別沿用既有頭像（工具圖示：扳手＋螺絲起子），之後影片縮圖、封面、App icon 都套用同一組視覺
+- 待辦：申請 Microsoft Store 開發者帳號時，Publisher display name 直接填 **Biahal**；同步確認 YouTube handle（如 `@Biahal`）與網域是否可用，統一各平台顯示名稱
+
 ## 執行順序建議
 
-不要一次把所有工具都上架，先挑一個小工具（如 `OT_Calc_Launcher`）當試點：用 Nuitka 編譯成 exe → 打包成 MSIX → 送 Microsoft Store 審核上架，走完一次「開發者帳號申請→認證送審→上架→網站導流」完整流程，跑通後再套用到其他工具。
+不要一次把所有工具都上架，先挑一個小工具（如 `OT_Calc_Launcher`）當試點：用 Nuitka 編譯成 exe → 打包成 MSIX → 送 Microsoft Store 審核上架，走完一次「開發者帳號申請（Publisher name：Biahal）→認證送審→上架→網站導流」完整流程，跑通後再套用到其他工具。
 
 ## 每日小工具素材（本機路徑）
 
