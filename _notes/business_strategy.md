@@ -91,20 +91,21 @@ Microsoft Store（實際下載／付費頁面）
 
 不會。Microsoft Store 沒有「上架滿多久自動下架」的機制，只有**違反政策**或**認證抽查不合格**時才會被要求修正或移除。真正會過期的是簽章憑證本身（現行規定最長 1 年，需年年續約），但只要簽名時有加 **timestamp**，就算憑證過期，已發布的舊版本 exe 依然會被系統信任，不影響既有用戶。
 
-## 品牌名稱：Biahal（已拍板）
+## 品牌名稱：AlbertBiahal（已拍板，2026-09-07 定案）
 
-- 個人／產品品牌統一定名為 **Biahal**
+- 個人／產品品牌統一定名為 **AlbertBiahal**（`@Biahal` 已被他人占用，改用這個組合）
 - 視覺識別沿用既有頭像（工具圖示：扳手＋螺絲起子），之後影片縮圖、封面、App icon 都套用同一組視覺
-- **YouTube handle：`@AlbertBiahal`**（已拍板）——`@Biahal` 已被他人占用，改用這個組合，確認未被使用
+- **YouTube handle：`@AlbertBiahal`**（已拍板，確認未被使用）
+- **Microsoft Store Publisher name：AlbertBiahal**（已同步修改，與 YouTube handle 一致）
 - 待辦：網域是否可用，統一各平台顯示名稱
 
 ## 執行順序建議
 
-不要一次把所有工具都上架，先挑一個小工具（如 `OT_Calc_Launcher`）當試點：用 Nuitka 編譯成 exe → 打包成 MSIX → 送 Microsoft Store 審核上架，走完一次「開發者帳號申請（Publisher name：Biahal）→認證送審→上架→網站導流」完整流程，跑通後再套用到其他工具。
+不要一次把所有工具都上架，先挑一個小工具（如 `OT_Calc_Launcher`）當試點：用 Nuitka 編譯成 exe → 打包成 MSIX → 送 Microsoft Store 審核上架，走完一次「開發者帳號申請（Publisher name：AlbertBiahal）→認證送審→上架→網站導流」完整流程，跑通後再套用到其他工具。
 
 ### 進度追蹤
 
-- [x] **Microsoft Store 開發者帳號申請** — 已完成（2026-09-06）。帳戶類型：個人；帳戶狀態：活動；Publisher name：**Biahal**；賣家 ID：95971780
+- [x] **Microsoft Store 開發者帳號申請** — 已完成（2026-09-06）。帳戶類型：個人；帳戶狀態：活動；Publisher name：**AlbertBiahal**（2026-09-07 由 Biahal 改定）；賣家 ID：95971780
   - 註冊過程中曾卡在 Partner Center「訪問受限」錯誤，原因是直接貼深連結（`/dashboard/registration`）繞過了正常流程；改從官方入口 https://developer.microsoft.com/en-us/microsoft-store/register/ → 點「開始使用」才順利完成，供之後其他 repo／帳號申請參考
 - [ ] 用 Nuitka 編譯 `OT_Calc_Launcher` → 打包成 MSIX
 - [ ] 送 Microsoft Store 審核上架
