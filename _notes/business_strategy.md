@@ -95,11 +95,19 @@ Microsoft Store（實際下載／付費頁面）
 
 - 個人／產品品牌統一定名為 **Biahal**
 - 視覺識別沿用既有頭像（工具圖示：扳手＋螺絲起子），之後影片縮圖、封面、App icon 都套用同一組視覺
-- 待辦：申請 Microsoft Store 開發者帳號時，Publisher display name 直接填 **Biahal**；同步確認 YouTube handle（如 `@Biahal`）與網域是否可用，統一各平台顯示名稱
+- 待辦：YouTube handle（如 `@Biahal`）與網域是否可用，統一各平台顯示名稱
 
 ## 執行順序建議
 
 不要一次把所有工具都上架，先挑一個小工具（如 `OT_Calc_Launcher`）當試點：用 Nuitka 編譯成 exe → 打包成 MSIX → 送 Microsoft Store 審核上架，走完一次「開發者帳號申請（Publisher name：Biahal）→認證送審→上架→網站導流」完整流程，跑通後再套用到其他工具。
+
+### 進度追蹤
+
+- [x] **Microsoft Store 開發者帳號申請** — 已完成（2026-09-06）。帳戶類型：個人；帳戶狀態：活動；Publisher name：**Biahal**；賣家 ID：95971780
+  - 註冊過程中曾卡在 Partner Center「訪問受限」錯誤，原因是直接貼深連結（`/dashboard/registration`）繞過了正常流程；改從官方入口 https://developer.microsoft.com/en-us/microsoft-store/register/ → 點「開始使用」才順利完成，供之後其他 repo／帳號申請參考
+- [ ] 用 Nuitka 編譯 `OT_Calc_Launcher` → 打包成 MSIX
+- [ ] 送 Microsoft Store 審核上架
+- [ ] 網站／YouTube 導流串接
 
 ## 每日小工具素材（本機路徑）
 
