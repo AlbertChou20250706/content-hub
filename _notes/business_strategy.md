@@ -114,8 +114,10 @@ Microsoft Store（實際下載／付費頁面）
 
 - [x] **Microsoft Store 開發者帳號申請** — 已完成（2026-09-06）。帳戶類型：個人；帳戶狀態：活動；Publisher name：**AlbertBiahal**（2026-09-07 由 Biahal 改定）；賣家 ID：95971780
   - 註冊過程中曾卡在 Partner Center「訪問受限」錯誤，原因是直接貼深連結（`/dashboard/registration`）繞過了正常流程；改從官方入口 https://developer.microsoft.com/en-us/microsoft-store/register/ → 點「開始使用」才順利完成，供之後其他 repo／帳號申請參考
-- [ ] `OT_Calc_Launcher` repo 補上 `manifest.json` ＋ service worker，啟用 GitHub Pages
-- [ ] 用 PWA Builder 產生 MSIX 安裝包
+- [x] **`OT_Calc_Launcher` repo 補上 PWA 必要檔案** — 已完成（2026-09-08）。新增 `manifest.json`、`sw.js`（service worker）、`icons/icon-192.png`、`icons/icon-512.png`，並在 `OT_Calculator.html` 加上 manifest／theme-color／icon 連結與 service worker 註冊
+  - 過程中 Claude GitHub App 一開始沒有這個 repo 的推送權限，已在 https://github.com/apps/claude/installations/select_target 手動把 `OT_Calc_Launcher` 加進允許存取清單解決；之後其他 repo 需要推送權限時可比照辦理
+- [ ] 啟用 GitHub Pages（repo Settings → Pages，選 `main` 分支）
+- [ ] 用 PWA Builder（https://www.pwabuilder.com/）掃描 GitHub Pages 網址，產生 MSIX 安裝包
 - [ ] 送 Microsoft Store 審核上架
 - [ ] 網站／YouTube 導流串接
 
