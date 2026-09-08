@@ -101,13 +101,21 @@ Microsoft Store（實際下載／付費頁面）
 
 ## 執行順序建議
 
-不要一次把所有工具都上架，先挑一個小工具（如 `OT_Calc_Launcher`）當試點：用 Nuitka 編譯成 exe → 打包成 MSIX → 送 Microsoft Store 審核上架，走完一次「開發者帳號申請（Publisher name：AlbertBiahal）→認證送審→上架→網站導流」完整流程，跑通後再套用到其他工具。
+不要一次把所有工具都上架，先挑一個小工具（如 `OT_Calc_Launcher`）當試點，走完一次「開發者帳號申請（Publisher name：AlbertBiahal）→打包→認證送審→上架→網站導流」完整流程，跑通後再套用到其他工具。
+
+**技術路徑修正（2026-09-08）**：原規劃「用 Nuitka 編譯成 exe」是假設試點工具是 Python 寫的 GUI 程式，實際查看 `OT_Calc_Launcher` repo 後發現它是**純 HTML/CSS/JS 的靜態網頁工具**（離線可用），完全沒有 Python 程式碼，Nuitka 不適用。改用對應的正確路徑：
+
+- **PWA Builder**（https://www.pwabuilder.com/，Microsoft 官方免費工具）：把符合 PWA 規格的網頁直接轉成 MSIX，不需要編譯器
+- 前置需求：`OT_Calc_Launcher` repo 要先補上 `manifest.json` 與 service worker 這兩個 PWA 必要檔案，再啟用 **GitHub Pages** 把 `OT_Calculator.html` 架成一個可被 PWA Builder 掃描的網址
+- 上傳到 Partner Center 送審、上架**不收費**（帳號免費、也不需要買簽章憑證，跟前面成本比較表的結論一致）
+- 這個修正只適用於這個試點工具；其他工具如果實際是 Python／原生程式，屆時要重新確認技術棧，不能照搬 PWA Builder 這條路
 
 ### 進度追蹤
 
 - [x] **Microsoft Store 開發者帳號申請** — 已完成（2026-09-06）。帳戶類型：個人；帳戶狀態：活動；Publisher name：**AlbertBiahal**（2026-09-07 由 Biahal 改定）；賣家 ID：95971780
   - 註冊過程中曾卡在 Partner Center「訪問受限」錯誤，原因是直接貼深連結（`/dashboard/registration`）繞過了正常流程；改從官方入口 https://developer.microsoft.com/en-us/microsoft-store/register/ → 點「開始使用」才順利完成，供之後其他 repo／帳號申請參考
-- [ ] 用 Nuitka 編譯 `OT_Calc_Launcher` → 打包成 MSIX
+- [ ] `OT_Calc_Launcher` repo 補上 `manifest.json` ＋ service worker，啟用 GitHub Pages
+- [ ] 用 PWA Builder 產生 MSIX 安裝包
 - [ ] 送 Microsoft Store 審核上架
 - [ ] 網站／YouTube 導流串接
 
