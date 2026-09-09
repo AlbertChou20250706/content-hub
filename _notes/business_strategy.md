@@ -125,8 +125,11 @@ Microsoft Store（實際下載／付費頁面）
   - **年龄分级**：IARC 問卷全部選「否」（不涉遊戲／社交／位置／購買等），結果為最低分級（3+／所有人）
   - **包**：已上傳 `OT Calculator - AlbertBiahal.msixbundle`，驗證通過（Validated），Device family 勾選 Windows 10/11 Desktop
   - **隱私政策關鍵教訓**：即使產品不收集任何個資、隱私問卷選「否」，只要套件宣告了 `runFullTrust` 等受限功能，Partner Center 仍會強制要求隱私政策 URL，屬性頁才會顯示「完成」。已建立 `privacy-policy.html` 並透過 GitHub Pages 提供：https://albertchou20250706.github.io/OT_Calc_Launcher/privacy-policy.html
-  - 剩下：**Store 一览**（Store 上架文案、截圖）尚未開始，「提交选项」待補
-- [ ] 完成 Store 一览（文案／截圖）並正式「提交进行认证」
+  - **Store 一览**：完成英語(美國)版文案（說明、簡短描述、關鍵字 7 個、開發者名稱）＋ 1 張桌面截圖
+  - **提交选项**：發布時機選「通過認證後立即發布」；`runFullTrust` 受限功能說明已填（PWA Builder 打包 PWA 為 Windows App 的標準做法，Microsoft 會在認證階段審核這份說明，不會卡在送出這關，見下方教訓）
+- [x] **正式送出「提交进行认证」** — 已完成（2026-09-09）。狀態：正在認證（提交 ✓ → 預處理中 → 認證 → 發布），Microsoft 預估數小時至最多 3 個工作日完成，通過後依設定自動發布上架
+  - **教訓**：Partner Center 側邊欄的「完成／未完成」徽章有時候不會即時反映真實存檔狀態（「属性」「提交选项」都遇過填完存了但徽章沒更新的狀況）。與其一直重新整理／截圖比對，**直接點「提交進行認證」讓系統做最終正式驗證**更有效率——如果真的有缺漏，系統送出時會給明確錯誤清單
+- [ ] 等待審核結果，確認正式上架
 - [ ] 網站／YouTube 導流串接
 
 ## 每日小工具素材（本機路徑）
