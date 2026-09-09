@@ -119,7 +119,14 @@ Microsoft Store（實際下載／付費頁面）
 - [x] **啟用 GitHub Pages** — 已完成（2026-09-08）。網址：https://albertchou20250706.github.io/OT_Calc_Launcher/OT_Calculator.html ；瀏覽器已能正常跳出安裝提示（App 名稱／圖示正確顯示）
 - [x] **用 PWA Builder 產生 MSIX 安裝包** — 已完成（2026-09-08）。掃描結果 0 錯誤／3 警告／7 提示（警告與提示為加分項，非必要），已下載三個檔案：`OT Calculator.msixbundle`（送審用）、`OT Calculator.sideload.msix`（本機測試用）、`OT Calculator.classic.appxbundle`（備用）
 - [x] **本機測試 sideload 版本** — 已完成（2026-09-08）。`install.ps1` 因公司電腦的 PowerShell 執行原則被組織政策鎖住，改用 `powershell -ExecutionPolicy Bypass -File install.ps1`（單次繞過，不改全域設定）成功安裝；App 以獨立視窗執行（非瀏覽器分頁），系統彈出「已從 Microsoft Store 安裝為應用程式」確認訊息，整條 PWA → MSIX → 安裝 技術路徑驗證成功
-- [ ] 上傳 `OT Calculator.msixbundle` 到 Partner Center 送審上架
+- [x] **Partner Center 提交流程走完大半** — 進行中（2026-09-08～09）：
+  - **定价和可用性**：免費（USD，零售價 $0）
+  - **属性**：類別選「生產率」；PublisherDisplayName／App name／Package ID 必須跟 Partner Center「产品标识」頁登記的值完全一致，否則套件驗證會失敗（詳見下方教訓）
+  - **年龄分级**：IARC 問卷全部選「否」（不涉遊戲／社交／位置／購買等），結果為最低分級（3+／所有人）
+  - **包**：已上傳 `OT Calculator - AlbertBiahal.msixbundle`，驗證通過（Validated），Device family 勾選 Windows 10/11 Desktop
+  - **隱私政策關鍵教訓**：即使產品不收集任何個資、隱私問卷選「否」，只要套件宣告了 `runFullTrust` 等受限功能，Partner Center 仍會強制要求隱私政策 URL，屬性頁才會顯示「完成」。已建立 `privacy-policy.html` 並透過 GitHub Pages 提供：https://albertchou20250706.github.io/OT_Calc_Launcher/privacy-policy.html
+  - 剩下：**Store 一览**（Store 上架文案、截圖）尚未開始，「提交选项」待補
+- [ ] 完成 Store 一览（文案／截圖）並正式「提交进行认证」
 - [ ] 網站／YouTube 導流串接
 
 ## 每日小工具素材（本機路徑）
