@@ -129,8 +129,9 @@ Microsoft Store（實際下載／付費頁面）
   - **提交选项**：發布時機選「通過認證後立即發布」；`runFullTrust` 受限功能說明已填（PWA Builder 打包 PWA 為 Windows App 的標準做法，Microsoft 會在認證階段審核這份說明，不會卡在送出這關，見下方教訓）
 - [x] **正式送出「提交进行认证」** — 已完成（2026-09-09）。狀態：正在認證（提交 ✓ → 預處理中 → 認證 → 發布），Microsoft 預估數小時至最多 3 個工作日完成，通過後依設定自動發布上架
   - **教訓**：Partner Center 側邊欄的「完成／未完成」徽章有時候不會即時反映真實存檔狀態（「属性」「提交选项」都遇過填完存了但徽章沒更新的狀況）。與其一直重新整理／截圖比對，**直接點「提交進行認證」讓系統做最終正式驗證**更有效率——如果真的有缺漏，系統送出時會給明確錯誤清單
-- [ ] 等待審核結果，確認正式上架
-- [ ] 網站／YouTube 導流串接
+- [x] **審核通過，正式上架** — 已完成（2026-09-13）。收到 Microsoft Partner Center 郵件通知「Your submission for your app OT Calculator - AlbertBiahal has been successfully processed」，最多 2 小時內於 Store 對外可見。試點工具從帳號申請到正式上架**完整跑通一次**，之後其他工具可直接沿用這套流程（先判斷技術棧是 PWA 還是原生程式，PWA 走 PWA Builder，原生程式另外評估打包方式）
+  - Store 連結：https://apps.microsoft.com/detail/9NKGTSLTN8RN
+- [ ] 網站／YouTube 導流串接（把這個 Store 連結放進 GitHub repo README、YouTube 影片說明欄）
 
 ## 每日小工具素材（本機路徑）
 
