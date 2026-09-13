@@ -131,7 +131,12 @@ Microsoft Store（實際下載／付費頁面）
   - **教訓**：Partner Center 側邊欄的「完成／未完成」徽章有時候不會即時反映真實存檔狀態（「属性」「提交选项」都遇過填完存了但徽章沒更新的狀況）。與其一直重新整理／截圖比對，**直接點「提交進行認證」讓系統做最終正式驗證**更有效率——如果真的有缺漏，系統送出時會給明確錯誤清單
 - [x] **審核通過，正式上架** — 已完成（2026-09-13）。收到 Microsoft Partner Center 郵件通知「Your submission for your app OT Calculator - AlbertBiahal has been successfully processed」，最多 2 小時內於 Store 對外可見。試點工具從帳號申請到正式上架**完整跑通一次**，之後其他工具可直接沿用這套流程（先判斷技術棧是 PWA 還是原生程式，PWA 走 PWA Builder，原生程式另外評估打包方式）
   - Store 連結：https://apps.microsoft.com/detail/9NKGTSLTN8RN
-- [ ] 網站／YouTube 導流串接（把這個 Store 連結放進 GitHub repo README、YouTube 影片說明欄）
+- [x] **網站導流串接** — 已完成（2026-09-13）。`OT_Calc_Launcher` repo README 頂部加上 Microsoft Store 徽章／連結 ＋ GitHub Pages 線上體驗連結；`OT_Calculator.html` 頁面內也加一條小橫幅導去 Store 下載頁，讓透過網頁版進來的人也能發現桌面 App
+  - **YouTube 導流**：這個工具目前還沒拍影片，等之後實際拍攝時，依「未來影片製作 SOP」章節的規則（B. 付費商品類型）處理——說明欄放 Store 連結，不放原始碼連結
+
+## 試點結論：第一個工具完整跑通
+
+`OT Calculator - AlbertBiahal` 是第一個走完「品牌定名 → 開發者帳號 → PWA 化 → 打包 → 送審 → 上架 → 導流」全流程的工具，可作為之後其他工具（PXE、SPD_Flash 等）上架的標準範本。下一個工具開始前，建議先確認該工具的技術棧（PWA vs. 原生程式），再套用對應的打包路線。
 
 ## 每日小工具素材（本機路徑）
 
