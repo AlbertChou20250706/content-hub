@@ -28,6 +28,6 @@
 
 ## 發布檢查
 
-- [ ] 連結已確認可正常開啟
-- [ ] 已同步更新 `_log/publish_log.md`
+- [x] 連結已確認可正常開啟（YouTube 說明欄的 Store／content-hub／GitHub repo 連結已補上並截圖確認）
+- [x] 已同步更新 `_log/publish_log.md`
 - [ ] 已回填 content-hub 首頁 README 索引表格該筆狀態

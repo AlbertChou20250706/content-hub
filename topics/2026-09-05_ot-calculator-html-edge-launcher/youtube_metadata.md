@@ -45,9 +45,9 @@
 
 完整工作流與腳本已開源，歡迎交流。
 
-#SIT #伺服器 #硬體驗證 #SUSE #教學 #工程師 #Python #AI工作流
+OT Calculator, PWA, Microsoft Store, Windows App, 加班計算, SIT, 免打包
 
-> ⚠️ 待補：上面【📚 延伸閱讀】的 Store／content-hub 連結是這次記錄時補上的建議版本，實際說明欄目前尚未更新，記得回去 YouTube Studio 同步更新。
+> ✅ 已同步（2026-09-13）：延伸閱讀的 Store／content-hub／GitHub repo 連結已實際更新進 YouTube 說明欄（已截圖確認）。結尾 hashtag 是否已從泛用標籤換成跟本集相關的內容、`#Shorts` 是否已移除，尚未實際核對，記得自行檢查一下 YouTube Studio 目前的最終內容，之後有空再回來把這份存檔更新成完全一致的版本。
 
 ## 時間戳章節（Chapters）
 
