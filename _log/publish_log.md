@@ -8,3 +8,4 @@
 | 2026-08-12 | ChouAP.Cloud 上雲 SOP：把專案從本機搬成 GitHub + Claude Code Cloud 工作流 | content-hub 主題頁建立 | topics/2026-08-12_chouap-cloud-migration-sop/README.md | GitHub 文字紀錄先行發布；YouTube 影片與 social post 待錄製、待發 |
 | 2026-08-13 | ChouAP.Cloud 上雲 SOP：把專案從本機搬成 GitHub + Claude Code Cloud 工作流 | YouTube 上架，主題索引與系列集數表回填 | https://www.youtube.com/watch?v=L16n_oDjXwQ | 狀態由草稿改為已發布；同步更新根目錄 README 與 series/claude-code-cloud-dev/README.md |
 | 2026-09-13 | 免打包 Electron 也有桌面體驗：用純 HTML + Edge 啟動器打造 OT Calculator | content-hub 主題頁建立並回填 | https://www.youtube.com/watch?v=JzPmid-098M | YouTube 影片實際發布於 2026-09-05；本篇為反向回填。同一工具已於 2026-09-13 通過審核上架 Microsoft Store（AlbertBiahal Publisher），說明欄尚待補上 Store 連結 |
+| 2026-09-13 | 免打包 Electron 也有桌面體驗：用純 HTML + Edge 啟動器打造 OT Calculator | 說明欄補上 Store／GitHub repo 連結；另剪一支 Shorts 導流版並回填 | https://www.youtube.com/shorts/ep86NV-DBjg | 長片說明欄已更新；Shorts 走既有 `Short_audio_transcription` 製作管線獨立產出，非長片剪輯 |

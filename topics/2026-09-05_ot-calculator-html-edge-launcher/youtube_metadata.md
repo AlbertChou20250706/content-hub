@@ -83,3 +83,25 @@ Science & Technology
 - [x] 標題含核心關鍵字
 - [x] 說明欄前兩行含核心關鍵字
 - [ ] 標籤涵蓋同義詞／相關搜尋詞（目前說明欄 hashtag 偏泛用，跟本集內容關聯度不高，可考慮換成更貼合 OT Calculator／PWA／Microsoft Store 主題的標籤）
+
+---
+
+# Shorts 版本
+
+## 連結
+
+https://www.youtube.com/shorts/ep86NV-DBjg
+
+## 製作方式
+
+走既有的 Shorts 製作管線 `G:\我的雲端硬碟\YouTube工作流\錄音工作流\Short_audio_transcription`，不是從長片剪出精華片段，是獨立產出的一支短影音。
+
+## 標題
+
+【直述型】單檔 HTML 打造離線 OT Calculator：打卡換算與防護實戰
+
+## 說明欄（Description）
+
+內容與長片版本完全相同（含延伸閱讀連結、追蹤資訊、本集製作標示），結尾 hashtag 為 `#Shorts #SIT #Linux #工程師工具`。
+
+> 📝 備註：說明欄整段照搬長片文字，沒有針對 Shorts 觀眾精簡。Shorts 觀眾多半不會展開長文字，之後可考慮改成更短、更直接的版本（開頭鉤子 + 1-2 句重點 + 連結），提升導流轉換率。

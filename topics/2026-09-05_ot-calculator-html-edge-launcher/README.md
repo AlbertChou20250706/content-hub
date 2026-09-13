@@ -7,7 +7,8 @@
 | 日期 | 2026-09-05 |
 | 分類 | 自動化工具 |
 | 狀態 | 已發布 |
-| YouTube | https://www.youtube.com/watch?v=JzPmid-098M |
+| YouTube（長片） | https://www.youtube.com/watch?v=JzPmid-098M |
+| YouTube（Shorts） | https://www.youtube.com/shorts/ep86NV-DBjg |
 | NotebookLM | |
 
 ## 背景
@@ -31,8 +32,10 @@
 
 ## 行動項（若有後續待辦）
 
-- [ ] 影片說明欄補上 Microsoft Store 下載連結（https://apps.microsoft.com/detail/9NKGTSLTN8RN），目前只有 YouTube／GitHub 個人首頁連結
-- [ ] GitHub 連結改指向 `OT_Calc_Launcher` repo 本身，而不是帳號首頁
+- [x] 影片說明欄補上 Microsoft Store 下載連結（https://apps.microsoft.com/detail/9NKGTSLTN8RN）
+- [x] GitHub 連結改指向 `OT_Calc_Launcher` repo 本身，而不是帳號首頁
+- [x] 剪一支 Shorts 導流（走既有 `Short_audio_transcription` 製作管線，非重剪長片片段）
+- [ ] Shorts 說明欄目前整段照搬長片文字，之後可考慮精簡成更適合 Shorts 觀眾的短版本
 
 ## 延伸資源
 
