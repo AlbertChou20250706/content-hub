@@ -178,3 +178,84 @@ Microsoft Store（實際下載／付費頁面）
 - 不放原始碼連結，只示範操作畫面（痛點→解法→成果）
 - 說明欄放 Microsoft Store 下載／購買連結——導流漏斗（YouTube → 網站/GitHub 介紹 → Microsoft Store 購買）在這裡真正落地變現
 - 可加一句「原始碼不公開，需要的功能歡迎透過 Store 頁面聯繫」，呼應防拷貝但不阻擋觀眾找到你的原則
+
+## 營運追蹤：50+ 工具規模的資料管理（2026-09-14 決定）
+
+**結論**：50+ 工具量級不需要真正的資料庫（SQL），Google Sheets／Notion 這類輕量表格工具就夠用，效能不是瓶頸。真正該優先做的是「可重複套用的 SOP」跟「營運追蹤表」，而不是資料庫系統本身。`content-hub` 這個 repo 保持只放 Markdown 公開內容的定位不變，不承擔追蹤表的角色（規範也禁止在這裡放工程邏輯／資料生成）。
+
+### 追蹤表欄位設計（建議用 Google Sheets 或 Notion 建立，不放進 content-hub repo）
+
+| 欄位 | 說明 |
+|---|---|
+| 工具名稱 | |
+| 本機來源路徑 | `Scrip_application` 底下的資料夾名稱 |
+| GitHub repo 連結 | |
+| 技術棧 | PWA／Python／其他——**必須實際打開程式碼確認過才填**，不能用資料夾名稱或猜的（OT_Calc_Launcher 就曾經猜錯） |
+| 目前階段 | 下拉選單，對應下方 SOP 的 8 個 Phase：未開始／技術棧確認中／GitHub 已推送／打包中／本機測試通過／已送審／審核中／已上架／內容已發布 |
+| Publisher name／Package ID／Publisher ID | 上架後填，供之後核對一致性用（PWA Builder 每次重開表單容易跑掉，這幾個值要固定住） |
+| Microsoft Store 連結 | |
+| 隱私政策頁面連結 | |
+| GitHub Pages 網址 | 若為 PWA |
+| content-hub topic 資料夾連結 | |
+| YouTube 長片／Shorts 連結 | |
+| 上架日期 | |
+| 備註／踩坑記錄 | 每個工具遇到的特殊狀況，累積下來就是自己的問題排除手冊 |
+
+## 新工具上架 SOP（草稿，依 OT Calculator 試點經驗整理）
+
+> 每一步都是這次試點實際走過、也實際踩過坑的流程，之後工具直接照這份勾，不用重新摸索。
+
+### Phase 0：選材與技術棧確認
+1. 從候選清單挑一個工具
+2. **實際打開程式碼確認技術棧**——不要用 repo 描述或資料夾名稱猜（教訓來源：一開始以為 `OT_Calc_Launcher` 是 Python GUI，實際打開才發現是純 HTML/JS，整個技術路徑因此重新規劃過一次）
+3. 依技術棧決定打包路線：純 HTML/JS 走 PWA Builder；Python GUI 需另外評估 Nuitka／PyInstaller（尚未驗證過，下一個 Python 工具會是第一次實測）
+
+### Phase 1：GitHub 準備
+4. 確認 repo 已存在、程式碼是最新版本
+5. 確認 Claude GitHub App 有這個 repo 的 push 權限，沒有就去 https://github.com/apps/claude/installations/select_target 手動加
+
+### Phase 2：PWA 化（僅適用純網頁工具）
+6. 補 `manifest.json`——**name／short_name 要提前想好最終 Store 上架名稱**，避免後面 PublisherDisplayName 對不上（見 Phase 6 的教訓）
+7. 補 service worker（`sw.js`）
+8. 準備圖示（192×192、512×512）
+9. 主 HTML 補上 manifest link／theme-color／service worker 註冊
+10. 啟用 GitHub Pages
+11. 瀏覽器打開確認會跳出安裝提示
+
+### Phase 3：隱私政策（提前準備，不要等卡關才做）
+12. 直接先寫一份 `privacy-policy.html` 放上 GitHub Pages，不管最後會不會被要求——PWA 打包出來的套件常帶 `runFullTrust` 等受限功能，Partner Center 屬性頁的隱私問卷不管選「是」或「否」，只要套件宣告了這類功能就會強制要求隱私政策 URL
+
+### Phase 4：打包（PWA Builder 路線）
+13. 用 PWA Builder 掃描 GitHub Pages 網址
+14. **關鍵**：先去 Partner Center 該產品的「产品标识」頁查好 Package/Identity/Name、Package/Identity/Publisher（`CN=...`）、Publisher display name 三個值
+15. 回 PWA Builder 的 Windows Package Options，**同一次表單裡**把這三個值＋App name（要跟 Partner Center 保留的 App 名稱完全一致）都填好才下載——**分開填、重新打開表單會重置成預設值**（`My Company Inc` 之類），這是這次踩最多次的坑
+16. 下載確認產出 `.msixbundle`（送審用）／`.sideload.msix`（本機測試用）／`install.ps1`
+
+### Phase 5：本機測試
+17. 用 sideload 版＋`install.ps1` 測試安裝；若遇到 PowerShell 執行原則限制（公司電腦常見），用 `powershell -ExecutionPolicy Bypass -File install.ps1` 單次繞過，不用改全域設定
+18. 確認 App 能以獨立視窗啟動（不是瀏覽器分頁）
+
+### Phase 6：Partner Center 上架
+19. 若尚未申請開發者帳號：務必從官方入口 https://developer.microsoft.com/en-us/microsoft-store/register/ 進入，**不要直接貼深連結**（否則會卡在「訪問受限」）
+20. 新增產品 → MSIX 或 PWA 應用 → 保留 App 名稱（跟 PWA Builder 填的完全一致）
+21. 定价和可用性：定價、市場（預設全球所有市場即可）
+22. 属性：類別；隱私政策問卷**直接選「是」並提供 Phase 3 準備好的隱私政策網址**，不要選「否」浪費時間卡關
+23. 年龄分级：IARC 問卷（純工具類選項通常一路選「否」即可，會得到最低分級）
+24. 包：上傳 `.msixbundle`，勾選對應的 Device family（純桌面工具只勾 Windows 10/11 Desktop）
+25. Store 一览：至少一種語言的文案（說明、簡短描述、關鍵字）＋至少 1 張截圖
+26. 提交选项：發布時機選「通過認證後立即發布」；若有 `runFullTrust` 等受限功能，填寫使用理由說明（標準寫法：PWA Builder 官方打包工具的必要功能，僅用於以全信任 WebView2 容器執行、不存取檔案系統／網路／硬體）
+27. **直接點「提交進行認證」**——Partner Center 側邊欄的完成／未完成徽章有時不會即時反映真實存檔狀態，與其一直重新整理比對，不如讓系統做最終正式驗證，有缺漏會給明確錯誤清單
+
+### Phase 7：上架後
+28. 等審核結果（數小時至最多 3 個工作日，會收到 Email 通知）
+29. 收到通過通知後，確認 Store 連結可正常開啟
+
+### Phase 8：內容與導流
+30. GitHub repo README 補上 Store 徽章／連結、GitHub Pages 線上體驗連結
+31. PWA 網頁本身加一條導去 Store 的橫幅
+32. `content-hub` 建立 `topics/YYYY-MM-DD_slug/` 三件套（`README.md`／`youtube_metadata.md`／`social_posts.md`，從 `_templates/` 複製起手）
+33. 回填根目錄 README 主題索引表、`_log/publish_log.md`
+34. YouTube 說明欄放 Store 連結＋對應 GitHub repo 連結
+35. 視情況剪一支 Shorts 導流（可另立獨立製作管線，不用是長片剪輯）
+36. 社群貼文發佈（`social_posts.md` 草稿直接用）
+37. 追蹤表狀態更新為「已上架／內容已發布」
