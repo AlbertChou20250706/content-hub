@@ -63,3 +63,9 @@ Albert.Chou
 
 - **Cloud session 為主力**：跨裝置接續撰寫／編輯內容，是主要工作模式
 - **Local session 僅做臨時小幅修改**：改完務必 `commit + push` 回 GitHub，不要留在本機未同步
+
+## 共勉
+
+> 沒有做不到的事，只有不想做的心。凡是想得到就一定能做到，只是方法與想法的變化而已。
+
+（2026-09-15：`tool-maintenance-digest` 的 GitHub Secret 除錯打通後，緊接著把 `daily-tool-digest` 與三個股市 LINE 機器人〔`ai-stock-weekly-report-bot`、`stock-committee-bot`〕陸續從 Anthropic API Key 按量計費，遷移成 Claude Code CLI（`CLAUDE_CODE_OAUTH_TOKEN`）走個人 Pro 訂閱額度，全數驗證跑通、LINE 通知正常送達後記下這句。）
