@@ -292,6 +292,18 @@ Microsoft Store（實際下載／付費頁面）
 | 週彙整 PR 進 content-hub | 改成**直接對該工具自己的 repo 開 PR**（程式碼修復，不進 content-hub） |
 | LINE 通知 | 沿用同一支通知機制 |
 
-**待確認的兩個開放問題**（比照 daily-tool-digest 當初「先問過 Albert 再定案」的作法）：
-1. 新開一個獨立 repo（如 `tool-maintenance-digest`），還是掛在 `daily-tool-digest` 底下當第二個 workflow？（建議新開，因為「發現新素材」跟「維護已上架產品」職責不同）
-2. 一開始掃全部工具 repo，還是先挑 1-2 個已上架的（目前只有 `OT_Calc_Launcher`）小範圍試跑？（建議先小範圍）
+**已確認並建置完成（2026-09-15，Albert 決定）**：
+1. **新開獨立 repo**：https://github.com/AlbertChou20250706/tool-maintenance-digest（private）——理由：「發現新素材」跟「維護已上架產品」職責不同，之後生態系會持續擴增，分開管理比較乾淨
+2. **一開始就以「監控多個工具 repo」為設計前提**，不是先寫死單一工具——`config/watched-repos.json` 用陣列，架構天生支援任意數量，目前陣列只有 `OT_Calc_Launcher` 一筆（因為目前只有它上架），之後每上架一個新工具就加一行，不需要改架構。目的：規則先定義好、控制權留在自己手上，之後狀況能即時處理
+
+### tool-maintenance-digest 建置狀態
+
+- 架構完全沿用 `daily-tool-digest` 已驗證的模式：獨立工程 repo ＋ GitHub Actions（每週一 09:07 台灣時間）＋ PROMPT.md 驅動 headless `claude -p` ＋ registry 追蹤已處理 Issue ＋ LINE 通知
+- 安全邊界：agent 只能開分支、草擬 PR、在 Issue 留言標記；**絕對不 merge、絕對不 push 到預設分支、絕對不觸發 Store 重新上架**，這條規則寫死在 `PROMPT.md` 裡，另外建議在各工具 repo 開 Branch protection rule 當第二層技術防線
+- 檔案已全部建立並推上：`DESIGN.md`、`PROMPT.md`、`config/watched-repos.json`、`registry/handled-issues.json`、`.github/workflows/tool-maintenance-digest.yml`
+- **卡關重演**：新建 repo 一樣先後撞到「Cloud session 沒有建 repo 權限」＋「新 repo 要手動加進 Claude GitHub App 允許清單」這兩道牆，跟之前 `OT_Calc_Launcher` 首次取得 push 權限時一模一樣，供之後開新 repo 時提前預期
+- **待辦（尚未完成，Workflow 目前還不能真的執行）**：需要手動到 `tool-maintenance-digest` 的 GitHub Settings 加三個 Repo Secrets：
+  1. `CLAUDE_CODE_OAUTH_TOKEN`（沿用 `daily-tool-digest` 已產生的同一組值，重新貼一次，因為 Secrets 是各 repo 獨立的）
+  2. `TOOL_REPOS_PUSH_TOKEN`（**需要新建**一組 Fine-grained PAT，權限涵蓋 `watched-repos.json` 列出的所有工具 repo 的 Contents/Issues/Pull requests write）
+  3. `LINE_CHANNEL_ACCESS_TOKEN`（沿用 `daily-tool-digest` 已經在用的同一組值，重新貼一次）
+  三個都設定好之後，用 `workflow_dispatch` 手動觸發一次驗證，再讓它照排程自動跑
