@@ -51,6 +51,8 @@
 - **`.TW` 後綴會被 LINE 誤判成網域名稱**：純文字訊息裡寫「3706.TW」會被自動轉成一個點了會壞掉的連結（`.TW` 是真實的國別頂級域名），三個 repo 的股票代號顯示都改成去掉交易所後綴。
 - **Claude API 的 web_search 允許網域清單，網域可能突然連不上**：`allowed_domains` 裡只要有一個網域當下對 Anthropic 的爬蟲不可達，整個請求會直接 400 失敗（不是只有那個網域的搜尋失敗），實測就在美股週報上踩到（`marketwatch.com`／`reuters.com`／`wsj.com` 一度回報不可達）。三個 repo 的週報／委員會生成程式都加了「retry without web_search」的防呆，網域失效時報告仍會照常送出（只是少了新聞連結），不會整篇開天窗。
 - **法人買賣超等真實數據要注意發布時機，不是查不到就代表程式有 bug**：TWSE 三大法人 T86 報表要等收盤後才會公布（約台灣時間下午 3 點後），在交易時段內手動測試會查到「沒有符合條件的資料」，屬預期行為而非程式錯誤；程式端已設計成查無資料就整段省略，不會編造數字。
+- **LINE push 400 錯誤，根因常是 secret 內容貼壞，不是邏輯錯**：曾發生「有扣款但群組沒收到訊息」，查 job log 發現是切換群組 ID 時 `LINE_PUSH_TARGET_IDS` 這個 secret 被貼壞（多餘字元／格式跑掉），不是程式邏輯問題；重新乾淨貼上即解決。順手在 `send_line.py`／`notify_failure.py` 加了 `if not response.ok: print(status_code, text)` 防呆記錄，之後同類問題能直接從 job log 看出原因，不用再猜。
+- **每個 repo 的 GitHub Secrets 互不相通**：`daily-tool-digest` 已設定好的 `CLAUDE_CODE_OAUTH_TOKEN` 不會自動套用到 `ai-stock-weekly-report-bot`／`stock-committee-bot`——即使是同一顆 token、同一個人的訂閱，每個 repo 還是要各自新增一次這個 secret，少加會在 `claude -p` 直接報 `Not logged in`。
 
 ## 行動項（若有後續待辦）
 
@@ -105,6 +107,17 @@
 - 候選池「誰進名單」是憑一般公開知識判斷（知名龍頭、股息貴族、主流大型 ETF），不是先跑數據篩選出來的；候選池選定後「誰排第一」才是 100% 真實 yfinance 數據計算的結果——這個界線刻意跟使用者說明清楚，避免誤解成整個名單都是數據驅動
 - 首次上線實測（2026-08-28）確認 yfinance 對候選池內的台股／美股標的財報數據（ROE、毛利率、自由現金流、ETF 費用率／規模）涵蓋度良好，數字與已知公開資訊量級相符（如台積電 ROE ≈ 40%、Mastercard ROE 因高額庫藏股導致帳面淨值極低而異常偏高等，均為真實財報特性、非資料異常）
 - 技術教訓：Claude API 的 `max_tokens` 設太高（24000）會讓 SDK 內建的「非串流請求最長 10 分鐘」估算保護機制直接擋下請求（`ValueError`，連 API 都還沒打就失敗），跟實際輸出長度無關，是純粹的用量上限估算；調回 16000（跟另外兩個自動化一致）即解決，不需要為此改成串流架構
+
+## 計費模式遷移：從 API Key 到 Claude Code CLI（個人 Pro 訂閱）
+
+前面三條自動化（週報、委員會、優質標的）原本都是直接用 `anthropic` Python SDK 呼叫 `client.messages.create()`，吃的是 Console 的 `ANTHROPIC_API_KEY` 按量計費額度。使用者本身已經是重度的 claude.ai Pro 訂閱用戶，希望改用訂閱內的額度而不是另外付費的 API 用量，於是把週報／委員會這兩條自動化（`ai-stock-weekly-report-bot`、`stock-committee-bot`）改成跟另一組不相關的工具挖掘自動化（`daily-tool-digest`／`tool-maintenance-digest`，屬於 content-hub 自己的 SIT 工具巡檢流程，跟股市無關，只是恰好共用同一個「ChouAP.Cloud」LINE 頻道）一樣的計費模式。
+
+**架構改動**：兩個 repo 的 `src/` 底下各自新增一支 `claude_cli.py`，把原本直接呼叫 SDK 的地方，改成用 `subprocess` 呼叫 `claude -p --output-format json`（Claude Code CLI 的 headless 模式），吃 stdout 回傳的單一 JSON 物件取出 `result` 欄位當作報告文字。連帶影響：
+- 認證從 `ANTHROPIC_API_KEY` 換成 `CLAUDE_CODE_OAUTH_TOKEN`（GitHub Actions workflow 要多加 `actions/setup-node` + `npm install -g @anthropic-ai/claude-code` 兩個步驟）
+- `web_search` 的網域限制從 API 端強制的 `allowed_domains`（硬限制，不合規網域整個請求直接 400），降級成寫在 prompt 裡「請只用這些網域」的軟性指示（Claude Code 的 WebSearch 工具本身沒有 CLI 層級的網域白名單機制）
+- 排程 cron 時間完全沒動，只換底層呼叫方式
+
+**驗證流程**（延續本 repo 一貫的「先改個人 LINE 驗證，過了再切回正式」模式）：先在兩個 repo 各建一個 `backup/pre-claude-code-cli-migration` 分支存住遷移前狀態當備份；因為這兩支機器人本來就是用 `LINE_PUSH_TARGET_IDS` 這個 secret 做**目標推播**（不像 `daily-tool-digest` 是用 broadcast，需要改程式碼才能導去個人）——所以「先發個人」在這裡單純是**改 secret 值**，不用動程式碼；改完手動觸發三個 workflow，第一輪全部失敗（見上方「每個 repo 的 GitHub Secrets 互不相通」），補上 `CLAUDE_CODE_OAUTH_TOKEN` secret 後第二輪三個全部成功，使用者確認 LINE 訊息內容排版正常後，才把 `LINE_PUSH_TARGET_IDS` 改回正式群組 ID。全程未經使用者同意不觸發正式驗證，也沒有動到 cron 排程本身。
 
 ## 延伸資源
 
