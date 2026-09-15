@@ -138,11 +138,15 @@ Microsoft Store（實際下載／付費頁面）
 
 `OT Calculator - AlbertBiahal` 是第一個走完「品牌定名 → 開發者帳號 → PWA 化 → 打包 → 送審 → 上架 → 導流」全流程的工具，可作為之後其他工具（PXE、SPD_Flash 等）上架的標準範本。下一個工具開始前，建議先確認該工具的技術棧（PWA vs. 原生程式），再套用對應的打包路線。
 
-## 每日小工具素材（本機路徑）
+## 每日小工具素材（本機路徑）⚠️ 更正：已經是現成、運作中的系統（2026-09-15 更正）
 
-- 素材來源：本機／Google 雲端硬碟 `G:\我的雲端硬碟\產品上架(Product Release Pipeline)\Scrip_application`，收集程式碼量較少的小工具，比照 `daily-tools/` 現有作法每天固定時間（構想 05:40）發一篇
-- **限制**：Claude Code cloud session 存取不到本機 `G:\` 路徑，且依 `CLAUDE.md` 規範，content-hub 這個 repo 本身**不能**放抓取／生成邏輯的自動化（`.github/workflows/` 僅允許 LINE 通知用途）
-- 這件事的正確歸屬是**擴充 `daily-tool-digest`**（獨立的自動化專案）的來源清單，讓它去讀 `Scrip_application` 底下的小工具、產生候選、定時 commit 產出的 Markdown 進 `content-hub/daily-tools/`；content-hub 只接收成品，不跑抓取邏輯
+> 這節原本寫「還沒開始、待擴充」是錯的——當時不知道這套系統已經存在。2026-09-15 實際打開 `daily-tool-digest` repo 才發現它從 2026-08-18 就開始每天跑，registry 裡已經累積 21 筆挑選紀錄。以下是更正後的正確狀態：
+
+- 素材來源：`daily-tool-digest`（獨立自動化 repo）+ `content-hub/daily-tools/`（只收成品 Markdown），**已經是現成、每天在跑的系統**，不是待建置項目
+- 架構：**GitHub Actions**（排程，非本機 Windows 工作排程器）→ Python 腳本用 **Google Service Account** 讀 `G:\我的雲端硬碟\產品上架(Product Release Pipeline)\Scrip_application`（解決了「cloud session 讀不到本機 G:\」這個問題，用服務帳號繞過，不是靠本機執行）→ 產出 manifest → 餵給 **headless `claude -p`**（帶入 `PROMPT.md` 定義的完整決策邏輯）→ 自主選材、寫 `source.md`、更新 registry、開週彙整 PR、LINE 通知
+- 選材邏輯：兩層去重（registry 比對＋content-hub 關鍵字搜尋）、新品優先、選完一輪後 revisit 最久沒被選的、掃不到候選就誠實回報不捏造
+- 完整設計文件在 `daily-tool-digest/DESIGN.md`（記錄了版本演進與踩過的坑：PowerShell 5.1 雙向編碼問題、headless CLI 下 Gmail MCP 不可用改用 LINE、`--max-turns` 取代 `--max-budget-usd` 等），之後要參考既有自動化模式，先查這份文件
+- 這套系統的架構模式（獨立工程 repo＋PROMPT.md 驅動 headless claude -p＋registry 狀態追蹤＋LINE 通知）是後續「維護 Agent」等新自動化的標準範本，見下方「維護 Agent 藍圖」章節
 
 ### daily-tools 呈現方式
 
@@ -259,3 +263,35 @@ Microsoft Store（實際下載／付費頁面）
 35. 視情況剪一支 Shorts 導流（可另立獨立製作管線，不用是長片剪輯）
 36. 社群貼文發佈（`social_posts.md` 草稿直接用）
 37. 追蹤表狀態更新為「已上架／內容已發布」
+
+## 維護 Agent 藍圖（2026-09-14／15）
+
+- 決策圖：https://claude.ai/artifact/CMcoSXXzv7oDsCTwa46x9n（存放追蹤表欄位設計與新工具上架 SOP 的視覺化決策圖，之後可依實際狀況修正）
+- **核心原則**：手動協作（on-demand session）永遠是預設；排程自動化只在真的划算時才加，而且加的時候是「一個共用 Routine」，不是「每個工具各一個」
+- **升級門檻**：工具數 15-30+、開始有真實使用者 Issue／評論回饋、同類問題重複出現、自己巡查時間開始擠壓到做新工具——四項符合兩項以上再考慮開 Routine
+- **安全邊界**：agent 能偵測、分類、草擬 PR；合併、發佈、Store 重新上架永遠是人工點頭，不自動跨過
+
+### 已確認的設計標準（2026-09-15）
+
+1. **三語 UI 是所有 scrip 工具的標準配置**：未來設計的工具都比照 `OT Calculator` 走繁體中文／英文／日文三語切換，目的是擴大上架後的市場價值（不是單一語系限定台灣市場）。「UI 英文＋註解日文」的雙語慣例**已排除**，那是誤植，不採用。
+2. 銷售平台維持 Microsoft Store 定案（見前面「銷售平台決定」章節），Gumroad 只是核對筆記記錄有沒有記準，不是要重新考慮。
+
+### 重大發現：`daily-tool-digest` 提供了現成的自動化範本
+
+實際打開該 repo 才發現這套系統已經運作近一個月（見上方「每日小工具素材」章節更正），架構是：**獨立工程 repo ＋ GitHub Actions 排程 ＋ PROMPT.md 驅動 headless `claude -p` ＋ registry 狀態追蹤 ＋ LINE 通知**，且已經在 `DESIGN.md` 裡記錄了大量實戰踩坑經驗（PowerShell 編碼問題、headless 下 Gmail MCP 不可用、`--max-turns` 用法等）。
+
+### 下一步：Issue 掃描維護 Agent（籌備中，尚未開工）
+
+沿用 `daily-tool-digest` 已驗證的架構模式，對應關係：
+
+| daily-tool-digest 的角色 | 維護 Agent 的對應設計 |
+|---|---|
+| 掃 Google Drive 找候選 | 掃所有已上架工具 repo 的 GitHub Issue（`gh issue list` 即可，不需要 Google API 那層複雜度） |
+| `registry/picked-tools.json` | 追蹤「哪些 Issue 已處理過」 |
+| PROMPT.md 驅動 headless claude -p | 同樣模式：讀 Issue → 判斷複雜度 → 簡單的草擬 PR／複雜的標記 |
+| 週彙整 PR 進 content-hub | 改成**直接對該工具自己的 repo 開 PR**（程式碼修復，不進 content-hub） |
+| LINE 通知 | 沿用同一支通知機制 |
+
+**待確認的兩個開放問題**（比照 daily-tool-digest 當初「先問過 Albert 再定案」的作法）：
+1. 新開一個獨立 repo（如 `tool-maintenance-digest`），還是掛在 `daily-tool-digest` 底下當第二個 workflow？（建議新開，因為「發現新素材」跟「維護已上架產品」職責不同）
+2. 一開始掃全部工具 repo，還是先挑 1-2 個已上架的（目前只有 `OT_Calc_Launcher`）小範圍試跑？（建議先小範圍）
