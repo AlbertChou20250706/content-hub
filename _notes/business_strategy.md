@@ -132,7 +132,7 @@ Microsoft Store（實際下載／付費頁面）
 - [x] **審核通過，正式上架** — 已完成（2026-09-13）。收到 Microsoft Partner Center 郵件通知「Your submission for your app OT Calculator - AlbertBiahal has been successfully processed」，最多 2 小時內於 Store 對外可見。試點工具從帳號申請到正式上架**完整跑通一次**，之後其他工具可直接沿用這套流程（先判斷技術棧是 PWA 還是原生程式，PWA 走 PWA Builder，原生程式另外評估打包方式）
   - Store 連結：https://apps.microsoft.com/detail/9NKGTSLTN8RN
 - [x] **網站導流串接** — 已完成（2026-09-13）。`OT_Calc_Launcher` repo README 頂部加上 Microsoft Store 徽章／連結 ＋ GitHub Pages 線上體驗連結；`OT_Calculator.html` 頁面內也加一條小橫幅導去 Store 下載頁，讓透過網頁版進來的人也能發現桌面 App
-  - **YouTube 導流**：這個工具目前還沒拍影片，等之後實際拍攝時，依「未來影片製作 SOP」章節的規則（B. 付費商品類型）處理——說明欄放 Store 連結，不放原始碼連結
+  - **YouTube 導流** ⚠️ 更正（2026-09-15）：這條原本寫「還沒拍影片」是錯的——影片其實早在 Store 上架之前就已經發布（`topics/2026-09-05_ot-calculator-html-edge-launcher/`，2026-09-05），是先有工具介紹影片、後補 Microsoft Store 這條變現線。2026-09-13 已回頭把說明欄補上 Store／GitHub repo 連結，另外剪了一支 Shorts 導流版（見 `_log/publish_log.md` 2026-09-13 兩筆紀錄）。這條待辦其實已完成，不是還沒開始
 
 ## 試點結論：第一個工具完整跑通
 
@@ -302,8 +302,8 @@ Microsoft Store（實際下載／付費頁面）
 - 安全邊界：agent 只能開分支、草擬 PR、在 Issue 留言標記；**絕對不 merge、絕對不 push 到預設分支、絕對不觸發 Store 重新上架**，這條規則寫死在 `PROMPT.md` 裡，另外建議在各工具 repo 開 Branch protection rule 當第二層技術防線
 - 檔案已全部建立並推上：`DESIGN.md`、`PROMPT.md`、`config/watched-repos.json`、`registry/handled-issues.json`、`.github/workflows/tool-maintenance-digest.yml`
 - **卡關重演**：新建 repo 一樣先後撞到「Cloud session 沒有建 repo 權限」＋「新 repo 要手動加進 Claude GitHub App 允許清單」這兩道牆，跟之前 `OT_Calc_Launcher` 首次取得 push 權限時一模一樣，供之後開新 repo 時提前預期
-- **待辦（尚未完成，Workflow 目前還不能真的執行）**：需要手動到 `tool-maintenance-digest` 的 GitHub Settings 加三個 Repo Secrets：
-  1. `CLAUDE_CODE_OAUTH_TOKEN`（沿用 `daily-tool-digest` 已產生的同一組值，重新貼一次，因為 Secrets 是各 repo 獨立的）
-  2. `TOOL_REPOS_PUSH_TOKEN`（**需要新建**一組 Fine-grained PAT，權限涵蓋 `watched-repos.json` 列出的所有工具 repo 的 Contents/Issues/Pull requests write）
-  3. `LINE_CHANNEL_ACCESS_TOKEN`（沿用 `daily-tool-digest` 已經在用的同一組值，重新貼一次）
-  三個都設定好之後，用 `workflow_dispatch` 手動觸發一次驗證，再讓它照排程自動跑
+- **三個 Repo Secrets 已設定並驗證完成（2026-09-15）** ✅：
+  1. `CLAUDE_CODE_OAUTH_TOKEN`、2. `TOOL_REPOS_PUSH_TOKEN`（新建的 Fine-grained PAT）、3. `LINE_CHANNEL_ACCESS_TOKEN` 三個都已設定
+  - 過程踩坑記錄：第一、二次 `workflow_dispatch` 驗證跑都因為 `CLAUDE_CODE_OAUTH_TOKEN` 貼進 GitHub Secret 時滑鼠選取漏字而 401 失敗；改用 cmd 的 `echo %CLAUDE_CODE_OAUTH_TOKEN%| clip` 直接把環境變數精確複製到剪貼簿、貼上覆蓋後，第三次 `workflow_dispatch` 驗證跑成功（`conclusion: success`）
+  - 驗證結果：`OT_Calc_Launcher` 目前沒有開放中的 Issue，0 新 Issue／0 PR／0 標記，LINE 通知正常送達
+  - 排程已可依 `.github/workflows/tool-maintenance-digest.yml` 定義的每週一 09:07 台灣時間正常自動執行，不需要再手動介入
