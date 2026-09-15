@@ -307,3 +307,32 @@ Microsoft Store（實際下載／付費頁面）
   - 過程踩坑記錄：第一、二次 `workflow_dispatch` 驗證跑都因為 `CLAUDE_CODE_OAUTH_TOKEN` 貼進 GitHub Secret 時滑鼠選取漏字而 401 失敗；改用 cmd 的 `echo %CLAUDE_CODE_OAUTH_TOKEN%| clip` 直接把環境變數精確複製到剪貼簿、貼上覆蓋後，第三次 `workflow_dispatch` 驗證跑成功（`conclusion: success`）
   - 驗證結果：`OT_Calc_Launcher` 目前沒有開放中的 Issue，0 新 Issue／0 PR／0 標記，LINE 通知正常送達
   - 排程已可依 `.github/workflows/tool-maintenance-digest.yml` 定義的每週一 09:07 台灣時間正常自動執行，不需要再手動介入
+
+## 第二個上架工具：`PXE_TFTP_GUI_Windows`（籌備中，2026-09-15 選定）
+
+延續「新工具上架 SOP」，這是繼 `OT Calculator` 後第二個走完整流程的工具，同時肩負驗證「Python 原生 GUI 打包路線（Nuitka／PyInstaller）」這個從沒實測過的技術路徑——原計畫第 3 項待辦。
+
+### Phase 0：選材與技術棧確認 — ✅ 已完成（2026-09-15）
+
+- 篩選過程：先排除了 `SPD_Flash_v1.0`（實際打開才發現是純 Linux bash script、無 GUI，跟業務策略筆記裡「PXE、SPD_Flash」的舉例語意不符——那句原意是講多 repo 分工慣例的既有先例，不是真的推薦名單，這裡更正一次）
+- 掃過帳號下 24 個 repo，確認 `PXE_TFTP_GUI_Windows` 是目前最乾淨的候選：
+  - `tkinter` GUI（Windows 原生視窗，非網頁）
+  - 全部只用 **Python 標準函式庫**（`os/sys/socket/threading/time/datetime/queue/tkinter`），**零第三方依賴**，打包風險最低
+  - 單一檔案 378 行，不複雜
+  - 對照組 `MiniAV_AlbertPro`（描述寫 PyQt）實際查看後，原始碼是包在 zip＋Word 文件裡，沒有乾淨的 `.py`，先不選
+- ⚠️ **待確認**：帳號下還有一個同名描述的 `PXE` repo（跟 `PXE_TFTP_GUI_Windows` 說明文字一模一樣），開工前要先跟 Albert 確認哪個是現役維護版本，避免改錯 repo
+
+### 排程（2026-09-15 訂，刻意放寬鬆，Albert 是上班族，平日不排重工作）
+
+| 時間 | Phase | 內容 | 預估工作量 |
+|---|---|---|---|
+| 2026-09-15 | Phase 0 | 選材＋技術棧確認 | 已完成 |
+| 2026-09-19 或 09-20（週末） | Phase 1 | 確認 repo 狀態、Claude GitHub App 推送權限、釐清 `PXE` vs `PXE_TFTP_GUI_Windows` 現役版本 | ~15 分鐘 |
+| 2026-09-26～27（週末） | **Phase 2（新路線，首次實測）** | Nuitka／PyInstaller 打包成 exe——全新未驗證路線，抓一整天餘裕，預期會踩坑 | 半天～一天 |
+| 2026-09-30（三）晚上 | Phase 3 | 隱私政策頁沿用 `OT Calculator` 模板修改 | ~15 分鐘 |
+| 2026-10-03～04（週末） | Phase 4＋5 | 研究 exe → MSIX 封裝方式（PWA Builder 不適用，需換工具）＋本機安裝測試 | 半天 |
+| 2026-10-10～11（週末） | Phase 6 | Partner Center 送審 | 半天 |
+| 送審後 1～3 個工作日 | Phase 7 | 等審核信、確認上架 | 等待，無主動工作量 |
+| 2026-10-17～18（週末） | Phase 8 | `content-hub` 三件套、README／`publish_log.md` 回填；影片／社群貼文視 Albert 時間，非必要卡點 | 半天，影片另計 |
+
+Phase 2、4 是沒驗證過的新路線，日期抓得比較寬鬆，卡關可以順延，不追求跟 `OT Calculator` 首次試點一樣的天天推進節奏。
