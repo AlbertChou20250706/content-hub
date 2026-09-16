@@ -1,6 +1,6 @@
 # YouTube 影片排程自動發布系統：GitHub Actions 批次清空佇列 + LINE 通知規劃
 
-> 自動化工具／規劃階段：用 GitHub Actions 排程驅動「待發布」播放清單批次轉為公開，並用 LINE Messaging API 回報結果
+> 自動化工具／已完成端對端驗證：用 GitHub Actions 排程驅動「待發布」播放清單批次轉為公開，並用 LINE Messaging API 回報結果
 
 | 項目 | 內容 |
 |---|---|
@@ -14,7 +14,7 @@
 
 本機電腦常態關機，無法用 Windows 工作排程器做「影片排程延遲公開」這件事，因此規劃借用 GitHub Actions 的雲端排程能力（cron，本機電腦免開機）取代。核心構想：新影片上傳時先設為「未列出（Unlisted）」放進 YouTube 的「待發布」播放清單，排入 position 順序，之後由排程程式在固定時段呼叫 YouTube Data API v3 把 `privacyStatus` 改成 `public`，達到「排程延遲公開」的效果。
 
-這篇是技術規格紀錄（專案代號 `ChouAP.Cloud - YT-AutoPublish`，規格書 v1.2）：架構、資料結構、API 設定步驟、主程式虛擬碼寫在這裡，**實作程式碼放在另一個獨立 repo**（依本 repo `CLAUDE.md` 的內容規範，content-hub 只放 Markdown、不放程式碼／CI 工程邏輯，`.github/workflows/` 也僅限儲存庫生命週期的 LINE 事件通知，不得放內容生成或爬蟲等工程邏輯）——[`yt-auto-publish`](https://github.com/AlbertChou20250706/yt-auto-publish)（Private），v1.0 已完成骨架實作（`scripts/publish.py` 主程式、YouTube／LINE API 封裝模組、GitHub Actions workflow、雙格式 Log），尚待填入實際 GitHub Secrets（Playlist ID、OAuth 憑證、LINE Token）才能首次 `workflow_dispatch` 驗證全流程。完整虛擬碼、資料結構、API 申請步驟見 [`notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md`](notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md)（使用者原始規格書全文）。
+這篇是技術規格紀錄（專案代號 `ChouAP.Cloud - YT-AutoPublish`，規格書 v1.2）：架構、資料結構、API 設定步驟、主程式虛擬碼寫在這裡，**實作程式碼放在另一個獨立 repo**（依本 repo `CLAUDE.md` 的內容規範，content-hub 只放 Markdown、不放程式碼／CI 工程邏輯，`.github/workflows/` 也僅限儲存庫生命週期的 LINE 事件通知，不得放內容生成或爬蟲等工程邏輯）——[`yt-auto-publish`](https://github.com/AlbertChou20250706/yt-auto-publish)（Private）。v1.0 骨架實作＋Google Cloud／LINE 全套設定＋GitHub Secrets 填入已全部完成，並用 2 支真實影片（長影音＋短影音）跑過一次 `workflow_dispatch` 端對端驗證：`videos.update` 正確把 Unlisted 轉為 Public、影片正確從「待發布佇列」移至「已發布紀錄」、LINE 收到彙總通知、`queue/` 與 `logs/` 正確 commit 回 repo。完整虛擬碼、資料結構、API 申請步驟見 [`notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md`](notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md)（使用者原始規格書全文）；repo 內另有 [`CLAUDE.md`](https://github.com/AlbertChou20250706/yt-auto-publish/blob/main/CLAUDE.md) 記錄 Albert.Chou Script Style 規範供未來維護參考。
 
 ## 做了什麼（規劃中的架構）
 
@@ -44,6 +44,14 @@
 - **私有 repo 連續 60 天無 commit 會被 GitHub 自動停用排程**：本系統每次觸發都會 commit 佇列狀態與 Log，正常使用不會觸發此限制，但佇列長期空著超過 60 天需手動喚醒一次。
 - **自動化程式碼與內容紀錄要分兩個 repo**：GitHub Actions workflow、`scripts/publish.py`、佇列 JSON 屬於工程檔案，依 `CLAUDE.md` 規範不能放進 content-hub；content-hub 只負責事後把「怎麼設計」寫成技術紀錄。
 
+### 部署實測踩到的坑（規格書 v1.2 沒寫到的部分）
+
+- **頻道既有的「待發布」播放清單不能直接沿用**：實測時發現頻道原本就有一個公開播放清單叫「待發布」，裡面已經放了 44 支**早就公開**的影片（純粹拿來做內容分類用，不是真的排程佇列）。若直接接上自動化，第一次觸發就會把這 44 支全部搬進「已發布」，打亂原有分類——解法是另外新建兩個名稱明顯區隔的專用播放清單（「YT-AutoPublish 待發布佇列」/「YT-AutoPublish 已發布紀錄」），只給自動化內部使用，跟頻道原有的內容分類播放清單完全脫鉤，一支影片本來就能同時存在多個播放清單。
+- **佇列播放清單本身的瀏覽權限也要設 Private**：如果自動化的「待發布佇列」播放清單本身是公開的，即使裡面的影片是 Unlisted，只要有人找到這個播放清單連結還是能點進去看，等於還沒正式發布就先被看光，失去排程延遲公開的意義。
+- **Google 近期把 OAuth 同意畫面改版成「Google Auth Platform」，切 Production 前多了新的必填欄位**：規格書 v1.2 只提到要填 App 名稱和 email，但實測發現「發布應用程式」按鈕會被擋下，額外要求「品牌」頁面填妥**應用程式首頁網址**與**隱私權政策網站**這兩個網址，並把它們的網域加進「授權網域」清單。因為這支工具永遠只有自己一個測試使用者、不會走 Google 正式驗證，這兩個網址內容不需要多正式（可沿用既有的作品集網站當首頁，隱私權政策沿用手上其他個人工具現成的說明頁面即可），登記授權網域這步也不需要走 Google Search Console 的擁有權驗證。
+- **LINE Channel Access Token 直接沿用既有的「ChouAP.Cloud」Bot**：不需要另外申請新的 Provider／Channel，跟 `ai-stock-weekly-report-bot`、`stock-committee-bot`、`quality-picks-bot` 共用同一組長期 Token；**切記不要點「Reissue」重新核發**，那會讓舊 Token 立刻失效，同時弄壞其他三個已經在用這組 Token 的自動化。
+- **手動 Re-run 一個「已經自己 commit+push 過」的 workflow 執行紀錄會失敗**：GitHub 的「Re-run jobs」會用當初觸發那個時間點的舊 commit 去跑，但 `main` 分支其實已經被那次執行自己的 commit 推進過了，導致重跑到最後 `git push` 時因為版本落後被拒絕（non-fast-forward）。這不是程式邏輯壞掉（`Run publish script` 那步依然正常跑完），純粹是「重跑自我寫回 repo 的 workflow」這個操作方式本身的已知副作用。解法：workflow 的 commit+push 步驟改成先 `git fetch` + `git rebase origin/main` 再 push；日常若要重測，也建議一律用「Run workflow」觸發全新執行，不要對舊 run 按 Re-run。
+
 ## 排程總覽（台灣時間 → UTC cron）
 
 | 台灣時間 | 對應 UTC 時間 | cron 表達式 | 定位 |
@@ -59,14 +67,15 @@
 
 - [x] 另開獨立自動化 repo（[`yt-auto-publish`](https://github.com/AlbertChou20250706/yt-auto-publish)，Private），完成 `scripts/publish.py` + 4 個輔助模組 + `.github/workflows/publish.yml` + `queue/pending.json` / `queue/published.json` 骨架實作
 - [x] `.github/workflows/publish.yml` 的 4 組 cron 時間依第 3 節對照表設定完成（UTC）
-- [ ] YouTube 端建立「待發布」與「已發布」兩個播放清單，記下 Playlist ID
-- [ ] 確認往後上傳影片凡要進佇列一律先設為 **Unlisted**
-- [ ] Google Cloud OAuth 同意畫面切換為 **In Production**（須在產生 Refresh Token *之前* 完成）
-- [ ] 用 Production 狀態重新產生一次 Refresh Token（`yt-auto-publish` repo 內 `scripts/get_refresh_token.py` 本機執行取得）
-- [ ] LINE Messaging API 官方帳號建立，並用個人 LINE 加為好友，取得 Channel Access Token
-- [ ] `yt-auto-publish` repo 設定 GitHub Secrets：`YT_CLIENT_ID`、`YT_CLIENT_SECRET`、`YT_REFRESH_TOKEN`、`LINE_CHANNEL_ACCESS_TOKEN`、`YT_PENDING_PLAYLIST_ID`、`YT_PUBLISHED_PLAYLIST_ID`
-- [ ] 首次執行以 `workflow_dispatch` 手動觸發驗證全流程，確認無誤後才交給排程自動跑
-- [ ] 整條流程穩定跑過幾輪後，再回來這裡錄 YouTube 教學、回填發布狀態
+- [x] YouTube 端建立「YT-AutoPublish 待發布佇列」與「YT-AutoPublish 已發布紀錄」兩個專用播放清單（刻意不沿用頻道原有、內容已公開的「待發布」/「已發布」分類清單，避免搞混）
+- [x] 確認往後上傳影片凡要進佇列一律先設為 **Unlisted**
+- [x] Google Cloud OAuth 同意畫面切換為 **In Production**（須在產生 Refresh Token *之前* 完成）
+- [x] 用 Production 狀態重新產生一次 Refresh Token（`yt-auto-publish` repo 內 `scripts/get_refresh_token.py` 本機執行取得）
+- [x] LINE Messaging API：沿用既有「ChouAP.Cloud」Bot（跟 `ai-stock-weekly-report-bot` 等共用同一組 Channel Access Token），不需另外申請
+- [x] `yt-auto-publish` repo 設定 GitHub Secrets：`YT_CLIENT_ID`、`YT_CLIENT_SECRET`、`YT_REFRESH_TOKEN`、`LINE_CHANNEL_ACCESS_TOKEN`、`YT_PENDING_PLAYLIST_ID`、`YT_PUBLISHED_PLAYLIST_ID`
+- [x] 首次執行以 `workflow_dispatch` 手動觸發驗證全流程：用 2 支真實影片（長影音＋短影音）實測成功，LINE 通知、播放清單搬移、privacyStatus 轉換皆正確
+- [x] 補強 `git push` 穩健性：commit 後先 `fetch` + `rebase origin/main` 再 push，避免排程重疊或重跑舊 run 時被 non-fast-forward 拒絕
+- [ ] 交給排程自動跑穩定幾輪後，再回來這裡錄 YouTube 教學、回填發布狀態
 
 ## 延伸資源
 
