@@ -8,3 +8,4 @@
 | 2026-08-12 | ChouAP.Cloud 上雲 SOP：把專案從本機搬成 GitHub + Claude Code Cloud 工作流 | content-hub 主題頁建立 | topics/2026-08-12_chouap-cloud-migration-sop/README.md | GitHub 文字紀錄先行發布；YouTube 影片與 social post 待錄製、待發 |
 | 2026-08-13 | ChouAP.Cloud 上雲 SOP：把專案從本機搬成 GitHub + Claude Code Cloud 工作流 | YouTube 上架，主題索引與系列集數表回填 | https://www.youtube.com/watch?v=L16n_oDjXwQ | 狀態由草稿改為已發布；同步更新根目錄 README 與 series/claude-code-cloud-dev/README.md |
 | 2026-08-27 | AI 股市週報自動化：GitHub Actions 觸發 + Claude 生成 + LINE 群組推播規劃 | content-hub 主題頁建立 | topics/2026-08-27_ai-stock-weekly-report-line-bot/README.md | GitHub 文字紀錄先行建立；目前為技術規劃階段，尚未開始實作，YouTube 影片與 social post 待發布 |
+| 2026-09-16 | YouTube 影片排程自動發布系統：GitHub Actions 批次清空佇列 + LINE 通知規劃 | content-hub 主題頁建立 | topics/2026-09-16_youtube-auto-publish-scheduler/README.md | 使用者提供技術規格書（v1.2）全文存入 notebooklm_sources；GitHub 文字紀錄先行建立，實作程式碼待另開獨立 repo，尚未開始工程實作，YouTube 影片與 social post 待發布 |
