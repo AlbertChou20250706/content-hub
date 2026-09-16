@@ -14,7 +14,7 @@
 
 本機電腦常態關機，無法用 Windows 工作排程器做「影片排程延遲公開」這件事，因此規劃借用 GitHub Actions 的雲端排程能力（cron，本機電腦免開機）取代。核心構想：新影片上傳時先設為「未列出（Unlisted）」放進 YouTube 的「待發布」播放清單，排入 position 順序，之後由排程程式在固定時段呼叫 YouTube Data API v3 把 `privacyStatus` 改成 `public`，達到「排程延遲公開」的效果。
 
-這篇是技術規格紀錄（專案代號 `ChouAP.Cloud - YT-AutoPublish`，規格書 v1.2）：架構、資料結構、API 設定步驟、主程式虛擬碼寫在這裡，**實作程式碼會放在另一個獨立 repo**（依本 repo `CLAUDE.md` 的內容規範，content-hub 只放 Markdown、不放程式碼／CI 工程邏輯，`.github/workflows/` 也僅限儲存庫生命週期的 LINE 事件通知，不得放內容生成或爬蟲等工程邏輯）——目前**尚未建立**，待正式動工時再開（可參考同類自動化 [`ai-stock-weekly-report-bot`](https://github.com/AlbertChou20250706/ai-stock-weekly-report-bot) 的分工模式）。完整虛擬碼、資料結構、API 申請步驟見 [`notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md`](notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md)（使用者原始規格書全文）。
+這篇是技術規格紀錄（專案代號 `ChouAP.Cloud - YT-AutoPublish`，規格書 v1.2）：架構、資料結構、API 設定步驟、主程式虛擬碼寫在這裡，**實作程式碼放在另一個獨立 repo**（依本 repo `CLAUDE.md` 的內容規範，content-hub 只放 Markdown、不放程式碼／CI 工程邏輯，`.github/workflows/` 也僅限儲存庫生命週期的 LINE 事件通知，不得放內容生成或爬蟲等工程邏輯）——[`yt-auto-publish`](https://github.com/AlbertChou20250706/yt-auto-publish)（Private），v1.0 已完成骨架實作（`scripts/publish.py` 主程式、YouTube／LINE API 封裝模組、GitHub Actions workflow、雙格式 Log），尚待填入實際 GitHub Secrets（Playlist ID、OAuth 憑證、LINE Token）才能首次 `workflow_dispatch` 驗證全流程。完整虛擬碼、資料結構、API 申請步驟見 [`notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md`](notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md)（使用者原始規格書全文）。
 
 ## 做了什麼（規劃中的架構）
 
@@ -55,16 +55,16 @@
 
 > GitHub Actions 的 cron 排程不保證準時，系統忙碌時可能延遲數分鐘到數十分鐘，設計上接受此誤差，不追求秒級精準。
 
-## 行動項（部署前檢查清單，待新開的自動化 repo 完成後逐項確認）
+## 行動項（部署前檢查清單）
 
+- [x] 另開獨立自動化 repo（[`yt-auto-publish`](https://github.com/AlbertChou20250706/yt-auto-publish)，Private），完成 `scripts/publish.py` + 4 個輔助模組 + `.github/workflows/publish.yml` + `queue/pending.json` / `queue/published.json` 骨架實作
+- [x] `.github/workflows/publish.yml` 的 4 組 cron 時間依第 3 節對照表設定完成（UTC）
 - [ ] YouTube 端建立「待發布」與「已發布」兩個播放清單，記下 Playlist ID
 - [ ] 確認往後上傳影片凡要進佇列一律先設為 **Unlisted**
 - [ ] Google Cloud OAuth 同意畫面切換為 **In Production**（須在產生 Refresh Token *之前* 完成）
-- [ ] 用 Production 狀態重新產生一次 Refresh Token（非沿用 Testing 期間舊 Token）
+- [ ] 用 Production 狀態重新產生一次 Refresh Token（`yt-auto-publish` repo 內 `scripts/get_refresh_token.py` 本機執行取得）
 - [ ] LINE Messaging API 官方帳號建立，並用個人 LINE 加為好友，取得 Channel Access Token
-- [ ] 另開獨立自動化 repo（Private），實作 `scripts/publish.py` + `.github/workflows/publish.yml` + `queue/pending.json` / `queue/published.json`
-- [ ] 該 repo 設定 GitHub Secrets：`YT_CLIENT_ID`、`YT_CLIENT_SECRET`、`YT_REFRESH_TOKEN`、`LINE_CHANNEL_ACCESS_TOKEN`
-- [ ] `.github/workflows/publish.yml` 的 4 組 cron 時間依第 3 節對照表設定（UTC）
+- [ ] `yt-auto-publish` repo 設定 GitHub Secrets：`YT_CLIENT_ID`、`YT_CLIENT_SECRET`、`YT_REFRESH_TOKEN`、`LINE_CHANNEL_ACCESS_TOKEN`、`YT_PENDING_PLAYLIST_ID`、`YT_PUBLISHED_PLAYLIST_ID`
 - [ ] 首次執行以 `workflow_dispatch` 手動觸發驗證全流程，確認無誤後才交給排程自動跑
 - [ ] 整條流程穩定跑過幾輪後，再回來這裡錄 YouTube 教學、回填發布狀態
 
@@ -73,7 +73,7 @@
 - 完整技術規格書（v1.2 全文，含虛擬碼、資料結構、OAuth／LINE 申請步驟、程式風格規範）：[`notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md`](notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md)
 - 相關文章／前作（分工模式參考：工程 repo + content-hub 文字紀錄分開）：本 repo [AI 股市週報自動化：GitHub Actions 觸發 + Claude 生成 + LINE 群組推播規劃](../2026-08-27_ai-stock-weekly-report-line-bot/README.md)
 - 參考資料：YouTube Data API v3 官方文件、LINE Messaging API 官方文件、LINE Notify 服務停止公告
-- 相關 repo：實作程式碼待另開獨立 repo（尚未建立）
+- 相關 repo：[`yt-auto-publish`](https://github.com/AlbertChou20250706/yt-auto-publish)（實作程式碼，Private）
 
 ---
 *此篇為 [content-hub](../../README.md) 系列紀錄之一。*
