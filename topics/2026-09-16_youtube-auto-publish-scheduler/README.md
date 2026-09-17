@@ -20,7 +20,7 @@
 
 六段流程：**讀取佇列 → 判斷是否有片 → 批次逐支處理 → 更新狀態檔 → LINE 彙總通知 → commit 回 repo**。
 
-1. **觸發層**：GitHub Actions `schedule`（cron），台灣時間每日 06:00 / 15:00 / 20:00 / 01:00 各觸發一次（UTC 對照見規格書第 3 節），另保留 `workflow_dispatch` 供手動補跑測試
+1. **觸發層**：GitHub Actions `schedule`（cron），原規格書 v1.2 設計為台灣時間每日 06:00 / 15:00 / 20:00 / 01:00 各觸發一次；實際部署後改為**每日 02:00 觸發一次**（程式碼 v1.1，見下方「部署實測踩到的坑」說明原因），另保留 `workflow_dispatch` 供手動補跑測試
 2. **佇列讀取層**：呼叫 `playlistItems.list` 重新核對「待發布」播放清單目前實際內容，依 `position` 排序，同時比對本地 `queue/pending.json`
 3. **批次處理層**：佇列若為空，直接 LINE 通知「本次無片可發」結束；若有片，**依序處理佇列中所有影片**（不是只發 1 支），每支執行：
    - `videos.update`：`privacyStatus` → `public`（冪等操作，見下方「關鍵發現」）
@@ -33,7 +33,7 @@
 
 ## 關鍵發現／重點
 
-- **改「單支發布」為「批次清空佇列」是 v1.1 的關鍵轉向**：一開始設計是每次觸發最多發 1 支，後來改為每次觸發把當下佇列**全部**依序發完。4 個時段因此變成「一天 4 次補發檢查點」的角色，不是分散發布的節流閥。
+- **改「單支發布」為「批次清空佇列」是規格書 v1.1 的關鍵轉向**：一開始設計是每次觸發最多發 1 支，後來改為每次觸發把當下佇列**全部**依序發完。原規劃的 4 個時段因此是「一天 4 次補發檢查點」的角色，不是分散發布的節流閥；實際部署後進一步發現「批次清空」設計下，一天觸發幾次其實不影響「該發的都會發到」這個結果，只影響「多久檢查一次」，因此才有本篇下方把時段從 4 次砍到 1 次的調整空間。
 - **舊影片（已 public）與新影片（unlisted）可混放同一佇列**（v1.2 釐清）：`videos.update(privacyStatus="public")` 是冪等操作，對已公開的舊影片呼叫不會出錯、只是沒有實質效果，腳本不需要額外判斷「這支是不是已經 public」才決定要不要處理，統一呼叫即可，邏輯更單純。
 - **YouTube OAuth 一定要先切到「In Production」再產生 Refresh Token**：停留在 Testing 狀態的 Refresh Token 會在 7 天後自動失效（`invalid_grant`），對無人值守的 GitHub Actions 是致命問題（靜默斷線，需人工重新授權）。若順序顛倒（先產生 Token 才切 Production），該 Token 仍可能帶著 Testing 期間的限制，必須重新走一次授權。
 - **`videos.update` 搭配 `part=status` 時要先 `videos.list` 讀出完整 `status` 物件再整包送回**：只改 `privacyStatus` 單一欄位送出，可能意外把 `publishAt`、`selfDeclaredMadeForKids` 等未指定欄位重置為預設值。
@@ -51,8 +51,20 @@
 - **Google 近期把 OAuth 同意畫面改版成「Google Auth Platform」，切 Production 前多了新的必填欄位**：規格書 v1.2 只提到要填 App 名稱和 email，但實測發現「發布應用程式」按鈕會被擋下，額外要求「品牌」頁面填妥**應用程式首頁網址**與**隱私權政策網站**這兩個網址，並把它們的網域加進「授權網域」清單。因為這支工具永遠只有自己一個測試使用者、不會走 Google 正式驗證，這兩個網址內容不需要多正式（可沿用既有的作品集網站當首頁，隱私權政策沿用手上其他個人工具現成的說明頁面即可），登記授權網域這步也不需要走 Google Search Console 的擁有權驗證。
 - **LINE Channel Access Token 直接沿用既有的「ChouAP.Cloud」Bot**：不需要另外申請新的 Provider／Channel，跟 `ai-stock-weekly-report-bot`、`stock-committee-bot`、`quality-picks-bot` 共用同一組長期 Token；**切記不要點「Reissue」重新核發**，那會讓舊 Token 立刻失效，同時弄壞其他三個已經在用這組 Token 的自動化。
 - **手動 Re-run 一個「已經自己 commit+push 過」的 workflow 執行紀錄會失敗**：GitHub 的「Re-run jobs」會用當初觸發那個時間點的舊 commit 去跑，但 `main` 分支其實已經被那次執行自己的 commit 推進過了，導致重跑到最後 `git push` 時因為版本落後被拒絕（non-fast-forward）。這不是程式邏輯壞掉（`Run publish script` 那步依然正常跑完），純粹是「重跑自我寫回 repo 的 workflow」這個操作方式本身的已知副作用。解法：workflow 的 commit+push 步驟改成先 `git fetch` + `git rebase origin/main` 再 push；日常若要重測，也建議一律用「Run workflow」觸發全新執行，不要對舊 run 按 Re-run。
+- **一天 4 次觸發，會讓「佇列是空的」也發 4 次 LINE 通知**：實際跑了一天後發現，4 個時段裡只要當下沒有新影片在佇列裡，一樣會發一則「Queue is empty」通知，等於一天最多發 4 則 LINE 訊息，不是只有真的發布影片那次才發。因為這個 LINE Bot channel（ChouAP.Cloud）跟另外 3 個自動化共用同一組 Token、共用每月 200 則的免費額度，4 次全部都算「佔用額度」，容易在不知不覺間逼近上限。既然「批次清空」設計本身已經保證「不管累積多久，下次觸發一定會全部處理掉」，一天檢查幾次只影響「多久後才發現有新片」，不影響「會不會漏發」，因此把排程從 4 次砍到**每日 1 次（02:00）**，同時降低通知消耗與 API 呼叫次數，程式碼相應升版為 v1.1。
 
 ## 排程總覽（台灣時間 → UTC cron）
+
+**目前實際部署（程式碼 v1.1）：**
+
+| 台灣時間 | 對應 UTC 時間 | cron 表達式 | 定位 |
+|---|---|---|---|
+| 02:00 | 前一日 18:00 | `0 18 * * *` | 每日唯一檢查點 |
+
+> GitHub Actions 的 cron 排程不保證準時，系統忙碌時可能延遲數分鐘到數十分鐘，設計上接受此誤差，不追求秒級精準。
+
+<details>
+<summary>原規格書 v1.2 設計的 4 個時段（已於部署後改為上方單一時段，展開查看歷史對照表）</summary>
 
 | 台灣時間 | 對應 UTC 時間 | cron 表達式 | 定位 |
 |---|---|---|---|
@@ -61,7 +73,7 @@
 | 20:00 | 當日 12:00 | `0 12 * * *` | 補發檢查點 |
 | 01:00 | 前一日 17:00 | `0 17 * * *` | 補發檢查點 |
 
-> GitHub Actions 的 cron 排程不保證準時，系統忙碌時可能延遲數分鐘到數十分鐘，設計上接受此誤差，不追求秒級精準。
+</details>
 
 ## 行動項（部署前檢查清單）
 
@@ -75,6 +87,7 @@
 - [x] `yt-auto-publish` repo 設定 GitHub Secrets：`YT_CLIENT_ID`、`YT_CLIENT_SECRET`、`YT_REFRESH_TOKEN`、`LINE_CHANNEL_ACCESS_TOKEN`、`YT_PENDING_PLAYLIST_ID`、`YT_PUBLISHED_PLAYLIST_ID`
 - [x] 首次執行以 `workflow_dispatch` 手動觸發驗證全流程：用 2 支真實影片（長影音＋短影音）實測成功，LINE 通知、播放清單搬移、privacyStatus 轉換皆正確
 - [x] 補強 `git push` 穩健性：commit 後先 `fetch` + `rebase origin/main` 再 push，避免排程重疊或重跑舊 run 時被 non-fast-forward 拒絕
+- [x] 排程從每日 4 次降為每日 1 次（02:00），因應 LINE 免費額度與多支自動化共用同一 Bot 的用量考量（程式碼升版 v1.1）
 - [ ] 交給排程自動跑穩定幾輪後，再回來這裡錄 YouTube 教學、回填發布狀態
 
 ## 延伸資源
