@@ -1,6 +1,6 @@
 # YouTube 影片排程自動發布系統：GitHub Actions 批次清空佇列 + LINE 通知規劃
 
-> 自動化工具／已完成端對端驗證：用 GitHub Actions 排程驅動「待發布」播放清單批次轉為公開，並用 LINE Messaging API 回報結果
+> 自動化工具／已完成端對端驗證：用 GitHub Actions 排程逐步把「待發布」播放清單裡的影片轉為公開（v1.2 起每次觸發最多 1 支），並用 LINE Messaging API 回報結果
 
 | 項目 | 內容 |
 |---|---|
@@ -22,25 +22,26 @@
 
 1. **觸發層**：GitHub Actions `schedule`（cron），原規格書 v1.2 設計為台灣時間每日 06:00 / 15:00 / 20:00 / 01:00 各觸發一次；實際部署後改為**每日 02:00 觸發一次**（程式碼 v1.1，見下方「部署實測踩到的坑」說明原因），另保留 `workflow_dispatch` 供手動補跑測試
 2. **佇列讀取層**：呼叫 `playlistItems.list` 重新核對「待發布」播放清單目前實際內容，依 `position` 排序，同時比對本地 `queue/pending.json`
-3. **批次處理層**：佇列若為空，直接 LINE 通知「本次無片可發」結束；若有片，**依序處理佇列中所有影片**（不是只發 1 支），每支執行：
+3. **批次處理層**：佇列若為空，直接 LINE 通知「本次無片可發」結束；若有片，依 position 順序嘗試，**最多成功發布 `MAX_PUBLISHES_PER_RUN` 支**（實際部署值 1，見下方「部署實測踩到的坑」——曾經改成「一次全部清空」，後來又改回「一天最多 1 支」），每支執行：
    - `videos.update`：`privacyStatus` → `public`（冪等操作，見下方「關鍵發現」）
    - `playlistItems.insert` 加入「已發布」清單、`playlistItems.delete` 從「待發布」移除
    - 更新 `pending.json` / `published.json` 兩份狀態檔
-   - 單支失敗記錄 `ERROR` 並跳過，**不中斷整批**，繼續處理下一支
+   - 單支失敗記錄 `ERROR`、**不計入本次發布上限**，繼續嘗試下一支；一旦達到上限就停止，其餘留到下次觸發
 4. **通知層**：LINE Messaging API `broadcast` 端點，彙總本次「共發布 N 支」＋逐支標題清單，若有失敗項目一併附註
 5. **Log 層**：CLI 純文字 + HTML 折疊式雙格式，六級訊息分級（`INFO/PASS/WARN/FAIL/CRIT/ERROR`）
 6. **版控層**：每次觸發結束後 `git commit + push` 佇列狀態與 Log 檔回 repo，作為歷史紀錄
 
 ## 關鍵發現／重點
 
-- **改「單支發布」為「批次清空佇列」是規格書 v1.1 的關鍵轉向**：一開始設計是每次觸發最多發 1 支，後來改為每次觸發把當下佇列**全部**依序發完。原規劃的 4 個時段因此是「一天 4 次補發檢查點」的角色，不是分散發布的節流閥；實際部署後進一步發現「批次清空」設計下，一天觸發幾次其實不影響「該發的都會發到」這個結果，只影響「多久檢查一次」，因此才有本篇下方把時段從 4 次砍到 1 次的調整空間。
+- **發布節奏在規格書與實作之間來回調整過兩次**：規格書 v1.0 原本是「每次觸發最多發 1 支」，v1.1 改成「每次觸發把當下佇列全部依序發完」（批次清空），程式碼一開始也照這個設計做；實際部署跑過幾天後，考量到「一次全部發完」對觀眾來說發布節奏太密集、不利內容規劃，**程式碼 v1.2 又改回「每次觸發最多成功發布 1 支」**（`MAX_PUBLISHES_PER_RUN`），佇列裡有 10 支也是一天發 1 支、其餘依序留到之後幾天。這個上限做成 `config.py` 裡的一個常數，之後想改回批次清空只要調大這個數字即可，不用重寫邏輯。
+- **一天觸發幾次，不等於一天發幾支**：批次清空與逐支節流是兩個獨立的維度——前者決定「多久檢查一次佇列」，後者決定「每次檢查最多發幾支」。目前的組合是「一天檢查 1 次（02:00）、每次最多發 1 支」，兩個維度都拉到最低，發布節奏等於「每天最多 1 支」。
 - **舊影片（已 public）與新影片（unlisted）可混放同一佇列**（v1.2 釐清）：`videos.update(privacyStatus="public")` 是冪等操作，對已公開的舊影片呼叫不會出錯、只是沒有實質效果，腳本不需要額外判斷「這支是不是已經 public」才決定要不要處理，統一呼叫即可，邏輯更單純。
 - **YouTube OAuth 一定要先切到「In Production」再產生 Refresh Token**：停留在 Testing 狀態的 Refresh Token 會在 7 天後自動失效（`invalid_grant`），對無人值守的 GitHub Actions 是致命問題（靜默斷線，需人工重新授權）。若順序顛倒（先產生 Token 才切 Production），該 Token 仍可能帶著 Testing 期間的限制，必須重新走一次授權。
 - **`videos.update` 搭配 `part=status` 時要先 `videos.list` 讀出完整 `status` 物件再整包送回**：只改 `privacyStatus` 單一欄位送出，可能意外把 `publishAt`、`selfDeclaredMadeForKids` 等未指定欄位重置為預設值。
 - **LINE Notify 已於 2025/3/31 停用**，改用官方建議替代方案 LINE Messaging API；因為只有自己一位好友，可直接用 **Broadcast 端點**，不需要架 Webhook 伺服器去取得個人 User ID，大幅簡化實作。
 - **雙重防重複機制**：播放清單本身的移動（待發布→已發布）是第一道防線，本地 `published.json` 依 `video_id` 比對是第二道防線——即使播放清單移動因故失敗，也不會重複呼叫 `videos.update`。
 - **批次處理採「單支失敗不中斷整批」設計**：API 額度用盡、影片已被刪除等單支錯誤只記錄 `ERROR` 並跳過，確保單一壞資料不會卡住整條佇列。
-- **API 配額隨佇列累積量變動**：單支完整發布約消耗 150 units（`videos.update` 50 + `playlistItems.insert` 50 + `playlistItems.delete` 50 + `list` 1），以每日預設 10,000 units 估算，單次批次上限約可處理 60+ 支仍在安全範圍；若佇列曾長期未清、一次累積數十支以上，需留意當日配額。
+- **API 配額用量**：單支完整發布約消耗 150 units（`videos.update` 50 + `playlistItems.insert` 50 + `playlistItems.delete` 50 + `list` 1）。改回「每次最多發 1 支」（v1.2）後，配額用量變得固定且可預測——不管佇列累積多少支，一次觸發最多就是 150 units 左右，遠低於每日預設 10,000 units，不需要再擔心佇列長期未清、一次累積數十支才觸發時的配額問題（這是先前「批次清空」設計才需要顧慮的情境）。
 - **私有 repo 連續 60 天無 commit 會被 GitHub 自動停用排程**：本系統每次觸發都會 commit 佇列狀態與 Log，正常使用不會觸發此限制，但佇列長期空著超過 60 天需手動喚醒一次。
 - **自動化程式碼與內容紀錄要分兩個 repo**：GitHub Actions workflow、`scripts/publish.py`、佇列 JSON 屬於工程檔案，依 `CLAUDE.md` 規範不能放進 content-hub；content-hub 只負責事後把「怎麼設計」寫成技術紀錄。
 
@@ -52,6 +53,7 @@
 - **LINE Channel Access Token 直接沿用既有的「ChouAP.Cloud」Bot**：不需要另外申請新的 Provider／Channel，跟 `ai-stock-weekly-report-bot`、`stock-committee-bot`、`quality-picks-bot` 共用同一組長期 Token；**切記不要點「Reissue」重新核發**，那會讓舊 Token 立刻失效，同時弄壞其他三個已經在用這組 Token 的自動化。
 - **手動 Re-run 一個「已經自己 commit+push 過」的 workflow 執行紀錄會失敗**：GitHub 的「Re-run jobs」會用當初觸發那個時間點的舊 commit 去跑，但 `main` 分支其實已經被那次執行自己的 commit 推進過了，導致重跑到最後 `git push` 時因為版本落後被拒絕（non-fast-forward）。這不是程式邏輯壞掉（`Run publish script` 那步依然正常跑完），純粹是「重跑自我寫回 repo 的 workflow」這個操作方式本身的已知副作用。解法：workflow 的 commit+push 步驟改成先 `git fetch` + `git rebase origin/main` 再 push；日常若要重測，也建議一律用「Run workflow」觸發全新執行，不要對舊 run 按 Re-run。
 - **一天 4 次觸發，會讓「佇列是空的」也發 4 次 LINE 通知**：實際跑了一天後發現，4 個時段裡只要當下沒有新影片在佇列裡，一樣會發一則「Queue is empty」通知，等於一天最多發 4 則 LINE 訊息，不是只有真的發布影片那次才發。因為這個 LINE Bot channel（ChouAP.Cloud）跟另外 3 個自動化共用同一組 Token、共用每月 200 則的免費額度，4 次全部都算「佔用額度」，容易在不知不覺間逼近上限。既然「批次清空」設計本身已經保證「不管累積多久，下次觸發一定會全部處理掉」，一天檢查幾次只影響「多久後才發現有新片」，不影響「會不會漏發」，因此把排程從 4 次砍到**每日 1 次（02:00）**，同時降低通知消耗與 API 呼叫次數，程式碼相應升版為 v1.1。
+- **「批次清空」用起來發布節奏太密集，改回「一天最多 1 支」（v1.2）**：排程降到一天 1 次之後，佇列若累積了好幾支未發影片（例如錄了一批影片、陸續加入佇列），批次清空設計會讓這一天觸發時**一次全部轉為公開**，對觀眾來說像是洗版，也不利於分散安排發布步調。改成 `MAX_PUBLISHES_PER_RUN = 1` 之後，不管佇列累積多少支，一天固定只發 1 支，依 `position` 順序排隊慢慢清；失敗的項目不計入這個上限（會繼續嘗試佇列裡下一支候選），確保單支壞資料不會卡住當天的發布名額。LINE 通知也新增「還有 N 支排隊中」的附註，方便掌握佇列積壓狀況。
 
 ## 排程總覽（台灣時間 → UTC cron）
 
@@ -88,6 +90,7 @@
 - [x] 首次執行以 `workflow_dispatch` 手動觸發驗證全流程：用 2 支真實影片（長影音＋短影音）實測成功，LINE 通知、播放清單搬移、privacyStatus 轉換皆正確
 - [x] 補強 `git push` 穩健性：commit 後先 `fetch` + `rebase origin/main` 再 push，避免排程重疊或重跑舊 run 時被 non-fast-forward 拒絕
 - [x] 排程從每日 4 次降為每日 1 次（02:00），因應 LINE 免費額度與多支自動化共用同一 Bot 的用量考量（程式碼升版 v1.1）
+- [x] 發布節奏從「批次清空佇列」改回「每次觸發最多發布 1 支」（`MAX_PUBLISHES_PER_RUN`），並用模擬 10 支佇列的隔離測試驗證只發 1 支、9 支留待下次（程式碼升版 v1.2）
 - [ ] 交給排程自動跑穩定幾輪後，再回來這裡錄 YouTube 教學、回填發布狀態
 
 ## 延伸資源
