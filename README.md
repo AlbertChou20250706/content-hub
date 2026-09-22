@@ -10,7 +10,7 @@ SIT 驗證與自動化實戰的公開紀錄庫 —— 技術工作 → GitHub �
 | [ChouAP.Cloud 上雲 SOP：把專案從本機搬成 GitHub + Claude Code Cloud 工作流](topics/2026-08-12_chouap-cloud-migration-sop/README.md) | 2026-08-12 | 教學 SOP | https://www.youtube.com/watch?v=L16n_oDjXwQ | 已發布 |
 | [AI 股市週報自動化：GitHub Actions 觸發 + Claude 生成 + LINE 群組推播規劃](topics/2026-08-27_ai-stock-weekly-report-line-bot/README.md) | 2026-08-27 | 自動化工具 | | 草稿 |
 | [YouTube 影片排程自動發布系統：GitHub Actions 批次清空佇列 + LINE 通知規劃](topics/2026-09-16_youtube-auto-publish-scheduler/README.md) | 2026-09-16 | 自動化工具 | | 草稿 |
-| [技術轉唱歌／音樂：獨立子品牌線規劃（暫定名稱，全新獨立 repo）](topics/2026-09-21_tech-to-music-subbrand/README.md) | 2026-09-21 | 自動化工具 | | 草稿 |
+| [ChouAP Tunes：技術轉唱歌／音樂獨立子品牌線規劃](topics/2026-09-21_tech-to-music-subbrand/README.md) | 2026-09-21 | 自動化工具 | | 草稿 |
 
 ## 結構
 
