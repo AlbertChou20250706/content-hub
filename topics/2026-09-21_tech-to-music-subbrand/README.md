@@ -44,6 +44,7 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - **Suno**：免費版每日 50 credits、有浮水印、僅供個人非商業用途；付費方案才有商用授權——Pro US$10/月（2,500 credits／月，最多 500 首）、Premier US$30/月（10,000 credits／月，最多 2,000 首）
 - **Udio**：免費版每月 100 credits（每 24 小時上限約 10 credits）；付費方案——Standard US$10/月（2,400 credits）、Pro US$30/月（6,000 credits）
 - **結論**：這條線的內容要拿去 YouTube 上架、可能有廣告收益，屬於商業使用，**免費版不夠用，需要至少 Pro／Standard 等級付費方案**，抓每月 NT$300–1,000 左右的營運成本
+- **踩坑紀錄（2026-09-22）**：註冊時用 **Google SSO 登入持續失敗**（一般視窗與無痕視窗都試過，畫面卡在 `auth/verify` 驗證步驟後跳「Log in failed」），改用 **Microsoft SSO 登入一次成功**；Suno 僅支援 SSO（Apple／Discord／Facebook／Google／Microsoft），沒有 email＋密碼登入，判斷是 Google 授權那端當下的暫時性問題，不是 Suno 或本機瀏覽器的問題——之後若又遇到 Google 登入失敗，直接換一個 SSO 供應商試即可，不用花時間查瀏覽器設定
 
 ### ⚠️ 重大更新（2026-09-22 查詢）：Udio 目前無法下載匯出，實務上不能用於這條產線
 
