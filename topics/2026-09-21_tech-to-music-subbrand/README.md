@@ -106,15 +106,16 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 ## 行動項（若有後續待辦）
 
 - [x] ~~使用者拍板子品牌名稱與新 repo 的 Public／Private 屬性後，建立新獨立 repo~~ → 名稱與屬性已拍板，**嘗試建立 `chouap-tunes`（Private）失敗**：這個 content-hub session 掛的 GitHub App 只被授權存取 `content-hub` 這一個 repo，沒有帳號層級的「建立新 repo」權限（API 回傳 `403 Resource not accessible by integration`）
-- [ ] **需要使用者手動建立 repo**：登入 GitHub → 右上角 `+` → `New repository` → repo name 填 `chouap-tunes` → 選 **Private** → 建立；建立後把連結回覆給 Claude，或用 `add_repo` 工具把新 repo 加進 session 範圍，即可繼續回填本篇「延伸資源」連結、視需要協助初始化 repo 內容（例如仿照 `yt-auto-publish` 加一份 CLAUDE.md）
-- [ ] 新 repo 建立後，回填本篇「延伸資源」的 repo 連結
+- [x] ~~需要使用者手動建立 repo~~ → 使用者已手動建立完成：[`chouap-tunes`](https://github.com/AlbertChou20250706/chouap-tunes)（Private，空 repo，未初始化 README／.gitignore／license）
+- [ ] 若要讓 Claude 之後直接操作 `chouap-tunes`（例如協助初始化 CLAUDE.md、寫入自動化腳本），需要使用者另外把 Claude 的 GitHub App 安裝／授權到這個新 repo（跟 `content-hub` 目前各自獨立的授權範圍一樣）——目前用 `add_repo` 嘗試存取回傳「repository not found or credential doesn't have access」，尚未取得存取權
 - [ ] 選定 pilot 內容並產出第一首試作歌曲，驗證效果後再決定是否往自動化 pipeline 推進
 
 ## 延伸資源
 
 - 相關文章／前作（技術系列策展邏輯參考，注意此篇的子品牌線刻意跟這份文件描述的三系列分開）：[`series/README.md`](../../series/README.md)
 - 分工模式參考（獨立 repo＋content-hub 規劃紀錄互相參照，但拉出原因不同——見上方「關鍵發現」）：[YouTube 影片排程自動發布系統：GitHub Actions 批次清空佇列 + LINE 通知規劃](../2026-09-16_youtube-auto-publish-scheduler/README.md)
-- 相關 repo：`chouap-tunes`（Private，待使用者手動建立，見上方「行動項」）
+- 相關 repo：[`chouap-tunes`](https://github.com/AlbertChou20250706/chouap-tunes)（Private，已建立，尚未授權 Claude GitHub App 存取）
+- AI 作曲工具：[Suno](https://suno.com)（目前選定使用的工具，見上方「AI 作曲工具費用」與「重大更新」）
 
 ---
 *此篇為 [content-hub](../../README.md) 系列紀錄之一。*
