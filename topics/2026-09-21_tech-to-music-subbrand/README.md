@@ -36,6 +36,40 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - **記憶點 vs 品牌調性是核心 trade-off**：歌曲化內容比純語音 Podcast（NotebookLM 音訊）更有記憶點、更適合剪 Shorts 病毒擴散，但跟目前頻道「SOP／自動化實戰」的專業調性反差大，這也是決定「拉出獨立子品牌」而非「掛在現有頻道下」的主因
 - **跟 `yt-auto-publish` 的分工模式不同之處**：`yt-auto-publish` 拉出獨立 repo 是因為「保密到公開那一刻」的安全考量（未公開 video_id 不能進公開 repo）；這次拉出獨立 repo **不是保密需求，是品牌區隔需求**——兩者都用「獨立 repo＋content-hub 留規劃紀錄互相參照」的分工外殼，但背後原因不同，未來若有人回頭看這篇要留意別混為一談
 
+## 前置研究：工具費用與法遵確認（2026-09-22 查詢，僅供參考，動手前需回官方頁面核對最新數字）
+
+### AI 作曲工具費用（Suno／Udio）
+
+- **Suno**：免費版每日 50 credits、有浮水印、僅供個人非商業用途；付費方案才有商用授權——Pro US$10/月（2,500 credits／月，最多 500 首）、Premier US$30/月（10,000 credits／月，最多 2,000 首）
+- **Udio**：免費版每月 100 credits（每 24 小時上限約 10 credits）；付費方案——Standard US$10/月（2,400 credits）、Pro US$30/月（6,000 credits）
+- **結論**：這條線的內容要拿去 YouTube 上架、可能有廣告收益，屬於商業使用，**免費版不夠用，需要至少 Pro／Standard 等級付費方案**，抓每月 NT$300–1,000 左右的營運成本
+
+### YouTube AI 揭露規範
+
+- 判斷要不要揭露的關鍵是「**內容是否看起來像真實、會不會讓觀眾誤以為是真人真事**」，不是「概念是不是自己原創設計」
+- 使用者情境（自己寫技術內容／歌詞，AI 只負責生成人聲演唱，不模仿特定真人歌手聲音）通常落在**不強制揭露**的範疇；仍建議上傳時把 YouTube Studio「Altered or synthetic content」欄位勾是，較保險
+- **真正的紅線是 voice cloning（複製／模仿特定真人歌手的聲音）**，不是揭露問題本身——只要不做這件事，自己寫詞、AI 生成演唱這件事本身沒有版權疑慮
+
+### 商標申請（若之後要保護子品牌名稱）
+
+- 主管機關：經濟部智慧財產局（TIPO），官網「商標檢索系統」可先免費查詢是否已有相似名稱
+- 費用（2026 現行規費）：申請規費 NT$3,000／類別（電子送件＋完全使用系統內建商品／服務參考名稱，最低可折抵到 NT$2,400／類）＋核准後註冊公告費 NT$2,500／件，一個類別粗抓約 **NT$5,000 左右**；若需加速審查另加 NT$6,000
+- 流程：檢索確認無衝突 → 準備商標圖樣與指定類別 → 電子申請（需自然人憑證等數位憑證）→ 官方審查 6–9 個月（有補正意見可能拖到 12 個月以上）→ 核准後繳費領證
+- 可自行送件（省錢，需花時間研究流程），也可找商標代理人代辦（行情約 NT$5,000–15,000，看事務所）
+
+### 參考來源
+
+- [Suno Pricing 2026: Cost & Competitor Comparison](https://checkthat.ai/brands/suno/pricing)
+- [Suno AI Pricing 2026: Free, Pro & Premier Plans Explained](https://sunowatermark.com/blog/suno-ai-pricing-2026/)
+- [Udio pricing 2026: A complete breakdown of plans & credits](https://www.eesel.ai/blog/udio-pricing)
+- [Udio Pricing 2026: Free vs Standard vs Pro](https://margabagus.com/udio-pricing-plans/)
+- [How we're helping creators disclose altered or synthetic content - YouTube Blog](https://blog.youtube/news-and-events/disclosing-ai-generated-content/)
+- [Disclosing use of altered or synthetic content - YouTube Help](https://support.google.com/youtube/answer/14328491?hl=en)
+- [AI Music on YouTube: Allowed With Disclosure Rules](https://dynamoi.com/learn/ai-music-distribution/is-ai-music-allowed-on-youtube)
+- [商標申請費用 2026 全解析](https://www.nss.com.tw/trademark-application-taiwan)
+- [智慧財產局商標主題網－商標規費清單](https://www.tipo.gov.tw/tw/trademarks/589.html)
+- [商標申請怎麼做？2026 最新商標註冊流程、費用、時間](https://liheng-law.com/trademark-registration-application-guide/)
+
 ## 待決策事項
 
 - [ ] 子品牌正式名稱
