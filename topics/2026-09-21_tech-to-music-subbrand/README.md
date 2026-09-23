@@ -108,16 +108,18 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - [x] 新 repo Public 或 Private → **先 Private 起手**，方向定調、命名穩定後再切 Public
 - [ ] 沿用既有 YouTube 頻道另開播放清單，還是開全新頻道
 - [x] AI 作曲工具選型 → **Suno**（Udio 已於 2025-10-30 起停用下載匯出功能，無法用於這條產線，見上方「重大更新」）；**Pro Plan 已訂閱（月繳，2026-09-23）**，商用授權隨方案生效；YouTube Content ID 風險仍待實際上架後觀察
-- [x] 挑選第一支試作內容做 pilot → **DSOX4024G 三步驟電壓量測**（已發布技術影片改編），歌詞已寫兩版（洗腦上口版、放慢節奏品味人生版），持續調整 Style 中
+- [x] 挑選第一支試作內容做 pilot → **DSOX4024G 三步驟電壓量測**（已發布技術影片改編）；經多輪歌詞／Style 調整（洗腦上口版 → 放慢節奏品味人生版 → 激昂副歌＋低沉明亮＋押韻版），**第一版母帶已產出且效果達標**（2026-09-23）。完整歌詞、Style 參數、母帶位置記錄於 [`chouap-tunes/pilots/dsox4024g.md`](https://github.com/AlbertChou20250706/chouap-tunes/blob/main/pilots/dsox4024g.md)
 
 ## 行動項（若有後續待辦）
 
 - [x] ~~使用者拍板子品牌名稱與新 repo 的 Public／Private 屬性後，建立新獨立 repo~~ → 名稱與屬性已拍板，**嘗試建立 `chouap-tunes`（Private）失敗**：這個 content-hub session 掛的 GitHub App 只被授權存取 `content-hub` 這一個 repo，沒有帳號層級的「建立新 repo」權限（API 回傳 `403 Resource not accessible by integration`）
 - [x] ~~需要使用者手動建立 repo~~ → 使用者已手動建立完成：[`chouap-tunes`](https://github.com/AlbertChou20250706/chouap-tunes)（Private，空 repo，未初始化 README／.gitignore／license）
 - [x] ~~若要讓 Claude 之後直接操作 `chouap-tunes`，需要使用者另外授權 Claude GitHub App~~ → 使用者已完成授權，Claude 已 clone 並推送初始 `README.md`（說明定位與現況，連回本篇規劃紀錄）
-- [ ] 使用者接下來前往 [Suno](https://suno.com) 註冊帳號，評估付費方案（商用授權與下載需求，見上方「AI 作曲工具費用」）
-- [ ] 選定 pilot 內容並產出第一首試作歌曲，驗證效果後再決定是否往自動化 pipeline 推進
-- [ ] 未來工作流規格書會寫在使用者本機 Google 雲端硬碟路徑（見下方「延伸資源」），交給 Gemini CLI（Agy_Antigravity）執行；Claude 無法存取該路徑，純記錄位置供之後對照
+- [x] ~~使用者接下來前往 Suno 註冊帳號，評估付費方案~~ → 已完成，並直接訂閱 Pro Plan（見上方「執行狀況」）
+- [x] ~~選定 pilot 內容並產出第一首試作歌曲，驗證效果~~ → 已完成，「接地永遠在通電之前」達標，母帶已下載（WAV），存放於 `G:\我的雲端硬碟\YouTube工作流\音樂題材\母帶\DSOX4024G_接地永遠在通電之前\`（本機路徑，Claude 無法存取，純記錄位置）
+- [x] ~~未來工作流規格書位置~~ → 已記錄於 `chouap-tunes` README 與本篇「延伸資源」
+- [ ] 決定「接地永遠在通電之前」是否作為 ChouAP Tunes 第一支正式發布內容；若要發布，需另外剪輯 MP4（WAV 母帶配畫面，YouTube 不接受純音檔上傳）
+- [ ] 再決定是否要把這套「達標公式」（歌詞結構＋Style 參數）套用到下一支技術內容，往自動化 pipeline 推進
 
 ## 延伸資源
 
