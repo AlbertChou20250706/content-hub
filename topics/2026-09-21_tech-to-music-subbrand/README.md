@@ -112,6 +112,7 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - [x] ~~若要讓 Claude 之後直接操作 `chouap-tunes`，需要使用者另外授權 Claude GitHub App~~ → 使用者已完成授權，Claude 已 clone 並推送初始 `README.md`（說明定位與現況，連回本篇規劃紀錄）
 - [ ] 使用者接下來前往 [Suno](https://suno.com) 註冊帳號，評估付費方案（商用授權與下載需求，見上方「AI 作曲工具費用」）
 - [ ] 選定 pilot 內容並產出第一首試作歌曲，驗證效果後再決定是否往自動化 pipeline 推進
+- [ ] 未來工作流規格書會寫在使用者本機 Google 雲端硬碟路徑（見下方「延伸資源」），交給 Gemini CLI（Agy_Antigravity）執行；Claude 無法存取該路徑，純記錄位置供之後對照
 
 ## 延伸資源
 
@@ -119,6 +120,7 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - 分工模式參考（獨立 repo＋content-hub 規劃紀錄互相參照，但拉出原因不同——見上方「關鍵發現」）：[YouTube 影片排程自動發布系統：GitHub Actions 批次清空佇列 + LINE 通知規劃](../2026-09-16_youtube-auto-publish-scheduler/README.md)
 - 相關 repo：[`chouap-tunes`](https://github.com/AlbertChou20250706/chouap-tunes)（Private，已建立並初始化 README，Claude 已取得存取權）
 - AI 作曲工具：[Suno](https://suno.com)（目前選定使用的工具，見上方「AI 作曲工具費用」與「重大更新」）
+- 未來工作流交接位置（本機路徑，Claude 無法存取）：`G:\我的雲端硬碟\產品上架(Product Release Pipeline)\設計規範\Agy_Antigravity\曲音聲專案`，交給 Gemini CLI（Agy_Antigravity）執行這條產線的工作流
 
 ---
 *此篇為 [content-hub](../../README.md) 系列紀錄之一。*
