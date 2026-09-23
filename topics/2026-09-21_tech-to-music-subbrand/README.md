@@ -45,6 +45,7 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - **Udio**：免費版每月 100 credits（每 24 小時上限約 10 credits）；付費方案——Standard US$10/月（2,400 credits）、Pro US$30/月（6,000 credits）
 - **結論**：這條線的內容要拿去 YouTube 上架、可能有廣告收益，屬於商業使用，**免費版不夠用，需要至少 Pro／Standard 等級付費方案**，抓每月 NT$300–1,000 左右的營運成本
 - **執行策略（拍板）**：先用 **免費版驗證**——每天 50 credits、一次生成約扣 5–10 credits，等於一天可測 5–10 次，足夠驗證「技術內容改編歌詞、AI 演唱效果」這個階段；等驗證方向可行、確定要正式發布時再升級 **Pro（US$10/月）**。**注意：免費版產出檔案有浮水印、授權僅供個人非商業用途，不能直接拿去 YouTube 正式發布**——正式發布前必須用升級後的 Pro 帳號重新生成一次當最終檔案，不能沿用免費驗證期做的版本
+- **⚠️ 重大更新（2026-09-23 查詢）：Suno 自 2026-09-03 起改下載政策，改成配額制且回溯適用**：**免費版是終身總共 7 次下載**（不是每天／每月重算），**Pro 每月 20 次、Premier 每月 60 次**；免費版下載仍僅供個人非商業用途。這個限制只影響「下載存檔」，在網頁內生成／播放試聽不受影響，一樣吃當天的 credits 額度。**驗證階段策略調整**：多在網頁裡生成、試聽篩選，篩到真的想留底比對的版本才下載，把 7 次終身額度留給值得留存的版本，不要每個草稿都下載；正式發布用的檔案仍必須等升級 Pro 後重新生成＋下載
 - **踩坑紀錄（2026-09-22）**：註冊時用 **Google SSO 登入持續失敗**（一般視窗與無痕視窗都試過，畫面卡在 `auth/verify` 驗證步驟後跳「Log in failed」），改用 **Microsoft SSO 登入一次成功**；Suno 僅支援 SSO（Apple／Discord／Facebook／Google／Microsoft），沒有 email＋密碼登入，判斷是 Google 授權那端當下的暫時性問題，不是 Suno 或本機瀏覽器的問題——之後若又遇到 Google 登入失敗，直接換一個 SSO 供應商試即可，不用花時間查瀏覽器設定
 
 ### ⚠️ 重大更新（2026-09-22 查詢）：Udio 目前無法下載匯出，實務上不能用於這條產線
@@ -96,6 +97,9 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - [Udio Halts AI Song Downloads After Copyright Settlement with UMG, Warner](https://www.webpronews.com/udio-halts-ai-song-downloads-after-copyright-settlement-with-umg-warner/)
 - [Changes associated with the Universal Music Group ("UMG") partnership - Udio Help Center](https://help.udio.com/en/articles/12683565-changes-associated-with-the-universal-music-group-umg-partnership)
 - [Suno vs Udio 2026: The AI Music Generation Showdown](https://neuronad.com/suno-vs-udio/)
+- [Suno | An update to our downloads policy and Terms of Service](https://suno.com/blog/suno-updates-tos)
+- [How many downloads come with my subscription? - Suno Help Center](https://help.suno.com/en/articles/13926209)
+- [AI Music Company Suno Unveils Download Caps for Free, Paid Tiers - Variety](https://variety.com/2026/music/news/suno-unveils-download-caps-for-free-paid-tiers-generator-1236831589/)
 
 ## 待決策事項
 
