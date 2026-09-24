@@ -121,7 +121,8 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - [ ] 決定「接地永遠在通電之前」是否作為 ChouAP Tunes 第一支正式發布內容；若要發布，需另外剪輯 MP4（WAV 母帶配畫面，YouTube 不接受純音檔上傳）
 - [x] ~~再決定是否要把這套「達標公式」套用到下一支技術內容~~ → 已啟動第二支 pilot（見下）
 - [x] ~~第二支 pilot（002）技術內容選定~~ → 確定為 [ChouAP.Cloud 上雲 SOP](../2026-08-12_chouap-cloud-migration-sop/README.md)（已發布），曲風 Pop Rock／沙啞渾厚磁性煙嗓男聲，主題扣緊「自由、不依賴單一台電腦」的敘事；歌詞草稿已產出，記錄於 [`chouap-tunes/pilots/002-pop-rock-smoky-voice.md`](https://github.com/AlbertChou20250706/chouap-tunes/blob/main/pilots/002-pop-rock-smoky-voice.md)，待使用者於 Suno 測試效果
-- [ ] 第二支 pilot 測試結果回報後，比照第一支補上 Advanced 參數與母帶位置，更新 `pilots/README.md` 索引狀態
+- [x] ~~第二支 pilot 測試結果回報後，補上母帶位置，更新索引狀態~~ → 已完成，歌名定案「**雲端浪人**」，母帶已產出且效果達標（2026-09-24），存放於 `G:\我的雲端硬碟\YouTube工作流\音樂題材\母帶\上雲 SOP 不依賴單一台電腦_雲端浪人\`（本機路徑，Claude 無法存取）
+- [ ] 決定「雲端浪人」是否作為正式發布內容；跟「接地永遠在通電之前」一樣，兩支目前都待決定是否進入正式發布流程（剪 MP4、上架 YouTube）
 
 ## 延伸資源
 
