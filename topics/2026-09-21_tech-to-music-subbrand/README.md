@@ -108,7 +108,7 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - [x] 新 repo Public 或 Private → **先 Private 起手**，方向定調、命名穩定後再切 Public
 - [ ] 沿用既有 YouTube 頻道另開播放清單，還是開全新頻道
 - [x] AI 作曲工具選型 → **Suno**（Udio 已於 2025-10-30 起停用下載匯出功能，無法用於這條產線，見上方「重大更新」）；**Pro Plan 已訂閱（月繳，2026-09-23）**，商用授權隨方案生效；YouTube Content ID 風險仍待實際上架後觀察
-- [x] 挑選第一支試作內容做 pilot → **DSOX4024G 三步驟電壓量測**（已發布技術影片改編）；經多輪歌詞／Style 調整（洗腦上口版 → 放慢節奏品味人生版 → 激昂副歌＋低沉明亮＋押韻版），**第一版母帶已產出且效果達標**（2026-09-23）。完整歌詞、Style 參數、母帶位置記錄於 [`chouap-tunes/pilots/dsox4024g.md`](https://github.com/AlbertChou20250706/chouap-tunes/blob/main/pilots/dsox4024g.md)
+- [x] 挑選第一支試作內容做 pilot → **DSOX4024G 三步驟電壓量測**（已發布技術影片改編）；經多輪歌詞／Style 調整（洗腦上口版 → 放慢節奏品味人生版 → 激昂副歌＋低沉明亮＋押韻版），**第一版母帶已產出且效果達標**（2026-09-23）。完整歌詞、Style 參數、母帶位置記錄於 [`chouap-tunes/pilots/001-dsox4024g.md`](https://github.com/AlbertChou20250706/chouap-tunes/blob/main/pilots/001-dsox4024g.md)（`chouap-tunes` 已建立 [pilots 總索引](https://github.com/AlbertChou20250706/chouap-tunes/blob/main/pilots/README.md)，之後多曲風擴充與 Gemini CLI 讀取都以這張索引表為準）
 
 ## 行動項（若有後續待辦）
 
@@ -119,7 +119,8 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - [x] ~~選定 pilot 內容並產出第一首試作歌曲，驗證效果~~ → 已完成，「接地永遠在通電之前」達標，母帶已下載（WAV），存放於 `G:\我的雲端硬碟\YouTube工作流\音樂題材\母帶\DSOX4024G_接地永遠在通電之前\`（本機路徑，Claude 無法存取，純記錄位置）
 - [x] ~~未來工作流規格書位置~~ → 已記錄於 `chouap-tunes` README 與本篇「延伸資源」
 - [ ] 決定「接地永遠在通電之前」是否作為 ChouAP Tunes 第一支正式發布內容；若要發布，需另外剪輯 MP4（WAV 母帶配畫面，YouTube 不接受純音檔上傳）
-- [ ] 再決定是否要把這套「達標公式」（歌詞結構＋Style 參數）套用到下一支技術內容，往自動化 pipeline 推進
+- [x] ~~再決定是否要把這套「達標公式」套用到下一支技術內容~~ → 已啟動第二支 pilot（見下）
+- [ ] **第二支 pilot（002）曲風已拍板（2026-09-24）：Pop Rock，沙啞＋渾厚＋磁性＋煙嗓男聲，輕搖滾情緒質感**；技術內容尚未選定，候選為 [ChouAP.Cloud 上雲 SOP](../2026-08-12_chouap-cloud-migration-sop/README.md)（已發布），待使用者拍板。`chouap-tunes` 已建立 `pilots/README.md` 總索引表 + `pilots/002-pop-rock-smoky-voice.md` 佔位檔，之後每支曲目都照編號＋索引表模式擴充，供未來 Gemini CLI 讀取整體工作流狀態
 
 ## 延伸資源
 
