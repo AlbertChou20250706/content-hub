@@ -120,7 +120,8 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - [x] ~~未來工作流規格書位置~~ → 已記錄於 `chouap-tunes` README 與本篇「延伸資源」
 - [ ] 決定「接地永遠在通電之前」是否作為 ChouAP Tunes 第一支正式發布內容；若要發布，需另外剪輯 MP4（WAV 母帶配畫面，YouTube 不接受純音檔上傳）
 - [x] ~~再決定是否要把這套「達標公式」套用到下一支技術內容~~ → 已啟動第二支 pilot（見下）
-- [ ] **第二支 pilot（002）曲風已拍板（2026-09-24）：Pop Rock，沙啞＋渾厚＋磁性＋煙嗓男聲，輕搖滾情緒質感**；技術內容尚未選定，候選為 [ChouAP.Cloud 上雲 SOP](../2026-08-12_chouap-cloud-migration-sop/README.md)（已發布），待使用者拍板。`chouap-tunes` 已建立 `pilots/README.md` 總索引表 + `pilots/002-pop-rock-smoky-voice.md` 佔位檔，之後每支曲目都照編號＋索引表模式擴充，供未來 Gemini CLI 讀取整體工作流狀態
+- [x] ~~第二支 pilot（002）技術內容選定~~ → 確定為 [ChouAP.Cloud 上雲 SOP](../2026-08-12_chouap-cloud-migration-sop/README.md)（已發布），曲風 Pop Rock／沙啞渾厚磁性煙嗓男聲，主題扣緊「自由、不依賴單一台電腦」的敘事；歌詞草稿已產出，記錄於 [`chouap-tunes/pilots/002-pop-rock-smoky-voice.md`](https://github.com/AlbertChou20250706/chouap-tunes/blob/main/pilots/002-pop-rock-smoky-voice.md)，待使用者於 Suno 測試效果
+- [ ] 第二支 pilot 測試結果回報後，比照第一支補上 Advanced 參數與母帶位置，更新 `pilots/README.md` 索引狀態
 
 ## 延伸資源
 
