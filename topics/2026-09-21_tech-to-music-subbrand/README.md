@@ -125,6 +125,7 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - [ ] 決定「雲端浪人」是否作為正式發布內容；跟「接地永遠在通電之前」一樣，兩支目前都待決定是否進入正式發布流程（剪 MP4、上架 YouTube）
 - [x] ~~第三支 pilot（003）曲風與技術內容選定~~ → 來源技術內容確定為 [YouTube 影片排程自動發布系統](../2026-09-16_youtube-auto-publish-scheduler/README.md)（草稿階段），把系統「靜默背叛」的踩坑細節（OAuth 7 天靜默失效、配額用盡靜默跳過、60 天未動被停用）包成感情破裂敘事
 - [x] ~~第三支 pilot 測試與風格調整~~ → 歌名定案「**沉默答案**」，人聲經 6 輪調整（磁性煙嗓女聲→男聲→調 BPM→拿掉煙嗓改渾厚→男聲加 mature/sensual→換回女聲再加強），最終定案為**深度成熟、感性、煙嗓的磁性女聲（alto 音域）**，母帶已產出且效果達標（2026-09-24），存放於 `G:\我的雲端硬碟\YouTube工作流\音樂題材\母帶\OAuth七天靜默失效配額用盡靜默跳過60天沒動靜就被停用_沉默答案\`（本機路徑，Claude 無法存取）；完整調整歷程記錄於 [`chouap-tunes/pilots/003-emo-smoky-female-voice.md`](https://github.com/AlbertChou20250706/chouap-tunes/blob/main/pilots/003-emo-smoky-female-voice.md)
+- [x] ~~字幕產線方案確定~~ → CapCut 自動歌詞額度有限、YouTube 自動字幕因唱歌＋中英混雜技術詞辨識失敗，最終改用**本機 Demucs 人聲分離 + Whisper 辨識**，公司（CPU）與家用（RTX GPU）電腦分工建置成功，免費無限次；用這套管線校對 001 時發現**實際演唱結構跟原始歌詞不同**（整段 Bridge 被跳過、改成多唱一次副歌），剪輯排列建議已修正。詳細安裝步驟、指令與踩坑記錄於 [`chouap-tunes/pilots/001-dsox4024g.md`](https://github.com/AlbertChou20250706/chouap-tunes/blob/main/pilots/001-dsox4024g.md)「字幕產線」章節
 
 ## 延伸資源
 
