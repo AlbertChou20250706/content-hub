@@ -14,7 +14,7 @@
 
 本機電腦常態關機，無法用 Windows 工作排程器做「影片排程延遲公開」這件事，因此規劃借用 GitHub Actions 的雲端排程能力（cron，本機電腦免開機）取代。核心構想：新影片上傳時先設為「未列出（Unlisted）」放進 YouTube 的「待發布」播放清單，排入 position 順序，之後由排程程式在固定時段呼叫 YouTube Data API v3 把 `privacyStatus` 改成 `public`，達到「排程延遲公開」的效果。
 
-這篇是技術規格紀錄（專案代號 `ChouAP.Cloud - YT-AutoPublish`，規格書 v1.2）：架構、資料結構、API 設定步驟、主程式虛擬碼寫在這裡，**實作程式碼放在另一個獨立 repo**（依本 repo `CLAUDE.md` 的內容規範，content-hub 只放 Markdown、不放程式碼／CI 工程邏輯，`.github/workflows/` 也僅限儲存庫生命週期的 LINE 事件通知，不得放內容生成或爬蟲等工程邏輯）——[`yt-auto-publish`](https://github.com/AlbertChou20250706/yt-auto-publish)（Private）。v1.0 骨架實作＋Google Cloud／LINE 全套設定＋GitHub Secrets 填入已全部完成，並用 2 支真實影片（長影音＋短影音）跑過一次 `workflow_dispatch` 端對端驗證：`videos.update` 正確把 Unlisted 轉為 Public、影片正確從「待發布佇列」移至「已發布紀錄」、LINE 收到彙總通知、`queue/` 與 `logs/` 正確 commit 回 repo。完整虛擬碼、資料結構、API 申請步驟見 [`notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md`](notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md)（使用者原始規格書全文）；repo 內另有 [`CLAUDE.md`](https://github.com/AlbertChou20250706/yt-auto-publish/blob/main/CLAUDE.md) 記錄 Albert.Chou Script Style 規範供未來維護參考。
+這篇是技術規格紀錄（專案代號 `ChouAP.Cloud - YT-AutoPublish`，規格書 v1.2）：架構、資料結構、API 設定步驟、主程式虛擬碼寫在這裡，**實作程式碼放在另一個獨立 repo**（依本 repo `CLAUDE.md` 的內容規範，content-hub 只放 Markdown、不放程式碼／CI 工程邏輯，`.github/workflows/` 也僅限儲存庫生命週期的 LINE 事件通知，不得放內容生成或爬蟲等工程邏輯）——`yt-auto-publish`（Private）。v1.0 骨架實作＋Google Cloud／LINE 全套設定＋GitHub Secrets 填入已全部完成，並用 2 支真實影片（長影音＋短影音）跑過一次 `workflow_dispatch` 端對端驗證：`videos.update` 正確把 Unlisted 轉為 Public、影片正確從「待發布佇列」移至「已發布紀錄」、LINE 收到彙總通知、`queue/` 與 `logs/` 正確 commit 回 repo。完整虛擬碼、資料結構、API 申請步驟見 [`notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md`](notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md)（使用者原始規格書全文）；repo 內另有 `CLAUDE.md` 記錄 Albert.Chou Script Style 規範供未來維護參考。
 
 ## 做了什麼（規劃中的架構）
 
@@ -80,7 +80,7 @@
 
 ## 行動項（部署前檢查清單）
 
-- [x] 另開獨立自動化 repo（[`yt-auto-publish`](https://github.com/AlbertChou20250706/yt-auto-publish)，Private），完成 `scripts/publish.py` + 4 個輔助模組 + `.github/workflows/publish.yml` + `queue/pending.json` / `queue/published.json` 骨架實作
+- [x] 另開獨立自動化 repo（`yt-auto-publish`，Private），完成 `scripts/publish.py` + 4 個輔助模組 + `.github/workflows/publish.yml` + `queue/pending.json` / `queue/published.json` 骨架實作
 - [x] `.github/workflows/publish.yml` 的 4 組 cron 時間依第 3 節對照表設定完成（UTC）
 - [x] YouTube 端建立「YT-AutoPublish 待發布佇列」與「YT-AutoPublish 已發布紀錄」兩個專用播放清單（刻意不沿用頻道原有、內容已公開的「待發布」/「已發布」分類清單，避免搞混）
 - [x] 確認往後上傳影片凡要進佇列一律先設為 **Unlisted**
@@ -100,7 +100,7 @@
 - 完整技術規格書（v1.2 全文，含虛擬碼、資料結構、OAuth／LINE 申請步驟、程式風格規範）：[`notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md`](notebooklm_sources/YOUTUBE_AUTO_PUBLISH_SPEC.md)
 - 相關文章／前作（分工模式參考：工程 repo + content-hub 文字紀錄分開）：本 repo [AI 股市週報自動化：GitHub Actions 觸發 + Claude 生成 + LINE 群組推播規劃](../2026-08-27_ai-stock-weekly-report-line-bot/README.md)
 - 參考資料：YouTube Data API v3 官方文件、LINE Messaging API 官方文件、LINE Notify 服務停止公告
-- 相關 repo：[`yt-auto-publish`](https://github.com/AlbertChou20250706/yt-auto-publish)（實作程式碼，Private）
+- 相關 repo：`yt-auto-publish`（實作程式碼，Private）
 
 ---
 *此篇為 [content-hub](../../README.md) 系列紀錄之一。*
