@@ -8,7 +8,7 @@
 | 分類 | 自動化工具 |
 | 狀態 | 草稿 |
 | 子品牌名稱 | ChouAP Tunes |
-| YouTube | |
+| YouTube | [@ChouAPTunes](https://www.youtube.com/@ChouAPTunes)（獨立頻道，2026-10-03 由原本的「Biahal」頻道改名而來） |
 | NotebookLM | |
 
 ## 背景
@@ -103,11 +103,19 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - [How many downloads come with my subscription? - Suno Help Center](https://help.suno.com/en/articles/13926209)
 - [AI Music Company Suno Unveils Download Caps for Free, Paid Tiers - Variety](https://variety.com/2026/music/news/suno-unveils-download-caps-for-free-paid-tiers-generator-1236831589/)
 
+## 執行狀況（2026-10-05 更新）
+
+- **發布進度**：第 1 到 4 首已公開（第 1 首 2026-09-30、第 4 首 2026-10-04，連結見 `_log/publish_log.md`）。**第 5 到 8 首已完成製作、經人工核對字幕與開場留言並核准**，依序每 48 小時公開 1 首，預計台灣時間 10/6、10/8、10/10、10/12 凌晨；各首公開後，歌名與連結才回填到發布紀錄（公開前不寫歌名，維持「保密到正式公開那一刻」的規範）
+- **影片製作**：歌曲以 `chouap-tunes`（Private）裡的工具自動組裝成 MP4（依時間軸設定把背景圖、動態片段、母帶與字幕合成，本機有 NVIDIA 顯卡時可用 GPU 加速）；字幕走本機 Demucs 人聲分離加 Whisper 辨識，再用校對規則與漏句檢查把關
+- **發布自動化**（實作在私有 repo `yt-auto-publish`，跟技術頻道共用同一個 repo，但路徑、憑證、排程完全各自獨立）：每天台灣時間 02:30 觸發；**兩階段把關**——先上傳到私人驗證播放清單，人工在 Studio 核對字幕與開場留言後核准，下一次排程才自動轉公開、移入「ChouAP Tunes｜全部歌曲」並發 LINE 通知；**每 48 小時最多公開 1 首**（距離上一次公開未滿 36 小時就不公開），所以就算同時準備好多首，也不會一次發光
+- **互動分析日報**（第三條獨立經路，台灣時間每天 07:00）：抓「全部歌曲」播放清單裡每支影片的觀看、讚、留言數，跟前一天比對，再由 Claude 寫分析與建議，LINE 發摘要、Gmail 寄全文。**程式碼已就位，尚待設定 3 個 Secret 才會真的運作**。觀眾留言屬於不可信的輸入，已對這一步加上防護，避免有人用留言指示模型改動 repo 的腳本
+- **公開紀錄的連結規則**（2026-10-05）：指向 Private repo（`chouap-tunes`、`yt-auto-publish`）的超連結已從公開紀錄全部移除，只寫名稱與路徑，規則寫在 `CLAUDE.md`
+
 ## 待決策事項
 
 - [x] 子品牌正式名稱 → **ChouAP Tunes**
 - [x] 新 repo Public 或 Private → **先 Private 起手**，方向定調、命名穩定後再切 Public
-- [ ] 沿用既有 YouTube 頻道另開播放清單，還是開全新頻道
+- [x] 沿用既有 YouTube 頻道另開播放清單，還是開全新頻道 → **獨立頻道**：2026-10-03 把原本的「Biahal」頻道改名為 **ChouAP Tunes**（`@ChouAPTunes`），跟技術頻道「Albert Biahal」（`@AlbertBiahal`）完全分開，兩邊可互相導流
 - [x] AI 作曲工具選型 → **Suno**（Udio 已於 2025-10-30 起停用下載匯出功能，無法用於這條產線，見上方「重大更新」）；**Pro Plan 已訂閱（月繳，2026-09-23）**，商用授權隨方案生效；YouTube Content ID 風險仍待實際上架後觀察
 - [x] 挑選第一支試作內容做 pilot → **DSOX4024G 三步驟電壓量測**（已發布技術影片改編）；經多輪歌詞／Style 調整（洗腦上口版 → 放慢節奏品味人生版 → 激昂副歌＋低沉明亮＋押韻版），**第一版母帶已產出且效果達標**（2026-09-23）。完整歌詞、Style 參數、母帶位置記錄於 `chouap-tunes/pilots/001-dsox4024g.md`（`chouap-tunes` 已建立 pilots 總索引，之後多曲風擴充與 Gemini CLI 讀取都以這張索引表為準）
 
@@ -119,20 +127,27 @@ content-hub 原本的內容飛輪是單向的「技術工作 → GitHub 紀錄 �
 - [x] ~~使用者接下來前往 Suno 註冊帳號，評估付費方案~~ → 已完成，並直接訂閱 Pro Plan（見上方「執行狀況」）
 - [x] ~~選定 pilot 內容並產出第一首試作歌曲，驗證效果~~ → 已完成，「接地永遠在通電之前」達標，母帶已下載（WAV），存放於 `G:\我的雲端硬碟\YouTube工作流\音樂題材\母帶\DSOX4024G_接地永遠在通電之前\`（本機路徑，Claude 無法存取，純記錄位置）
 - [x] ~~未來工作流規格書位置~~ → 已記錄於 `chouap-tunes` README 與本篇「延伸資源」
-- [ ] 決定「接地永遠在通電之前」是否作為 ChouAP Tunes 第一支正式發布內容；若要發布，需另外剪輯 MP4（WAV 母帶配畫面，YouTube 不接受純音檔上傳）
+- [x] ~~決定「接地永遠在通電之前」是否作為 ChouAP Tunes 第一支正式發布內容；若要發布，需另外剪輯 MP4~~ → 已發布（2026-09-30 公開）；MP4 由本機 `build_video.py` 依時間軸設定自動組裝，不再手動剪輯
 - [x] ~~再決定是否要把這套「達標公式」套用到下一支技術內容~~ → 已啟動第二支 pilot（見下）
 - [x] ~~第二支 pilot（002）技術內容選定~~ → 確定為 [ChouAP.Cloud 上雲 SOP](../2026-08-12_chouap-cloud-migration-sop/README.md)（已發布），曲風 Pop Rock／沙啞渾厚磁性煙嗓男聲，主題扣緊「自由、不依賴單一台電腦」的敘事；歌詞草稿已產出，記錄於 `chouap-tunes/pilots/002-pop-rock-smoky-voice.md`，待使用者於 Suno 測試效果
 - [x] ~~第二支 pilot 測試結果回報後，補上母帶位置，更新索引狀態~~ → 已完成，歌名定案「**雲端浪人**」，母帶已產出且效果達標（2026-09-24），存放於 `G:\我的雲端硬碟\YouTube工作流\音樂題材\母帶\上雲 SOP 不依賴單一台電腦_雲端浪人\`（本機路徑，Claude 無法存取）
-- [ ] 決定「雲端浪人」是否作為正式發布內容；跟「接地永遠在通電之前」一樣，兩支目前都待決定是否進入正式發布流程（剪 MP4、上架 YouTube）
+- [x] ~~決定「雲端浪人」是否作為正式發布內容~~ → 已公開（使用者 2026-10-05 確認；第 3 首「沉默答案」也已公開）
 - [x] ~~第三支 pilot（003）曲風與技術內容選定~~ → 來源技術內容確定為 [YouTube 影片排程自動發布系統](../2026-09-16_youtube-auto-publish-scheduler/README.md)（草稿階段），把系統「靜默背叛」的踩坑細節（OAuth 7 天靜默失效、配額用盡靜默跳過、60 天未動被停用）包成感情破裂敘事
 - [x] ~~第三支 pilot 測試與風格調整~~ → 歌名定案「**沉默答案**」，人聲經 6 輪調整（磁性煙嗓女聲→男聲→調 BPM→拿掉煙嗓改渾厚→男聲加 mature/sensual→換回女聲再加強），最終定案為**深度成熟、感性、煙嗓的磁性女聲（alto 音域）**，母帶已產出且效果達標（2026-09-24），存放於 `G:\我的雲端硬碟\YouTube工作流\音樂題材\母帶\OAuth七天靜默失效配額用盡靜默跳過60天沒動靜就被停用_沉默答案\`（本機路徑，Claude 無法存取）；完整調整歷程記錄於 `chouap-tunes/pilots/003-emo-smoky-female-voice.md`
 - [x] ~~字幕產線方案確定~~ → CapCut 自動歌詞額度有限、YouTube 自動字幕因唱歌＋中英混雜技術詞辨識失敗，最終改用**本機 Demucs 人聲分離 + Whisper 辨識**，公司（CPU）與家用（RTX GPU）電腦分工建置成功，免費無限次；用這套管線校對 001 時發現**實際演唱結構跟原始歌詞不同**（整段 Bridge 被跳過、改成多唱一次副歌），剪輯排列建議已修正。詳細安裝步驟、指令與踩坑記錄於 `chouap-tunes/pilots/001-dsox4024g.md`「字幕產線」章節
+- [x] ~~第 4 首（004）走完兩階段發布流程並公開上架~~ → 2026-10-04 完成，第一支走完「上傳到私人驗證播放清單 → 人工核對 → 核准 → 排程自動公開」的歌（紀錄見 `_log/publish_log.md`）
+- [x] ~~發布自動化：兩階段把關、每 48 小時最多公開 1 首~~ → 2026-10-03 至 04 完成（實作在私有 repo `yt-auto-publish`，細節見本篇「執行狀況」）
+- [x] ~~第 5 到 8 首完成製作並核准，排入公開佇列~~ → 2026-10-05 完成，預計 10/6、10/8、10/10、10/12 凌晨依序公開；公開後回填歌名與連結到 `_log/publish_log.md`
+- [x] ~~互動分析日報（第三條獨立經路）程式碼就位~~ → 2026-10-05 完成
+- [ ] 設定互動分析日報需要的 3 個 GitHub Secret（Claude Code 認證 Token、收發報告的 Gmail 地址、該帳號的應用程式密碼），再到 Actions 手動執行一次驗證
+- [ ] 第 5 到 8 首每首公開後：到 YouTube Studio 釘選開場留言（API 無法釘選），並回填公開連結到發布紀錄
+- [ ] 第 1 到 3 首的公開連結與日期尚未補進發布紀錄（目前只有第 4 首那一筆）
 
 ## 延伸資源
 
 - 相關文章／前作（技術系列策展邏輯參考，注意此篇的子品牌線刻意跟這份文件描述的三系列分開）：[`series/README.md`](../../series/README.md)
 - 分工模式參考（獨立 repo＋content-hub 規劃紀錄互相參照，但拉出原因不同——見上方「關鍵發現」）：[YouTube 影片排程自動發布系統：GitHub Actions 批次清空佇列 + LINE 通知規劃](../2026-09-16_youtube-auto-publish-scheduler/README.md)
-- 相關 repo：`chouap-tunes`（Private，已建立並初始化 README，Claude 已取得存取權）
+- 相關 repo：`chouap-tunes`（Private，歌曲設計文件與影片製作工具，Claude 已取得存取權）、`yt-auto-publish`（Private，ChouAP Tunes 的發布自動化與互動分析日報，跟技術頻道共用 repo、各自獨立路徑）
 - AI 作曲工具：[Suno](https://suno.com)（目前選定使用的工具，見上方「AI 作曲工具費用」與「重大更新」）
 - 未來工作流交接位置（本機路徑，Claude 無法存取）：`G:\我的雲端硬碟\產品上架(Product Release Pipeline)\設計規範\Agy_Antigravity\曲音聲專案`，交給 Gemini CLI（Agy_Antigravity）執行這條產線的工作流
 
