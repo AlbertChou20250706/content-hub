@@ -55,6 +55,7 @@
 - **一天 4 次觸發，會讓「佇列是空的」也發 4 次 LINE 通知**：實際跑了一天後發現，4 個時段裡只要當下沒有新影片在佇列裡，一樣會發一則「Queue is empty」通知，等於一天最多發 4 則 LINE 訊息，不是只有真的發布影片那次才發。因為這個 LINE Bot channel（ChouAP.Cloud）跟另外 3 個自動化共用同一組 Token、共用每月 200 則的免費額度，4 次全部都算「佔用額度」，容易在不知不覺間逼近上限。既然「批次清空」設計本身已經保證「不管累積多久，下次觸發一定會全部處理掉」，一天檢查幾次只影響「多久後才發現有新片」，不影響「會不會漏發」，因此把排程從 4 次砍到**每日 1 次（02:00）**，同時降低通知消耗與 API 呼叫次數，程式碼相應升版為 v1.1。
 - **「批次清空」用起來發布節奏太密集，改回「一天最多 1 支」（v1.2）**：排程降到一天 1 次之後，佇列若累積了好幾支未發影片（例如錄了一批影片、陸續加入佇列），批次清空設計會讓這一天觸發時**一次全部轉為公開**，對觀眾來說像是洗版，也不利於分散安排發布步調。改成 `MAX_PUBLISHES_PER_RUN = 1` 之後，不管佇列累積多少支，一天固定只發 1 支，依 `position` 順序排隊慢慢清；失敗的項目不計入這個上限（會繼續嘗試佇列裡下一支候選），確保單支壞資料不會卡住當天的發布名額。LINE 通知也新增「還有 N 支排隊中」的附註，方便掌握佇列積壓狀況。
 - **發布目的地不強制是內部專用清單**：`YT_PUBLISHED_PLAYLIST_ID` 一開始設計成指向「YT-AutoPublish 已發布紀錄」這種自動化內部帳本用途的清單，但這只是一個可自由指定的 GitHub Secret，並非程式邏輯的硬性要求——真正判斷「是否已處理過」靠的是 `published.json` 依 `video_id` 比對，跟這個播放清單本身無關。實測後直接把它改指向頻道既有的真實內容分類播放清單（「硬體除錯實戰｜工程師的職場溝通指南」），發布後影片就直接進到觀眾會看的清單，省去「先進內部清單、之後再手動搬一次」的步驟；純粹是改 Secret 值，沒有動到程式碼。
+- **新影片進佇列不再限定 Unlisted，Private 也可以（2026-10-05）**：原本的「背景」一節提到核心構想是先設為 Unlisted 放進佇列，當初這樣選是因為想先把連結分享給朋友預覽影片成品意見；這個需求後來確認已經不存在，改用 Private 防護更嚴格、也不影響自動化——`videos.update` 是整包讀出目前 `status` 再改 `privacyStatus` 送回（見上方「關鍵發現」），不論原本是 Unlisted 還是 Private 都一樣能轉成 Public；`playlistItems.insert`（加入已發布清單）是在轉為 Public **之後**才執行，不會有私人影片被加進公開播放清單的時序問題。因此佇列裡的影片「進去前」是 Unlisted 或 Private 皆可，唯一不能是 Public（舊的已公開影片混放同一佇列的情境見規格書 0-1 節、上方「關鍵發現」第 3 點）。
 
 ## 排程總覽（台灣時間 → UTC cron）
 
@@ -83,7 +84,7 @@
 - [x] 另開獨立自動化 repo（[`yt-auto-publish`](https://github.com/AlbertChou20250706/yt-auto-publish)，Private），完成 `scripts/publish.py` + 4 個輔助模組 + `.github/workflows/publish.yml` + `queue/pending.json` / `queue/published.json` 骨架實作
 - [x] `.github/workflows/publish.yml` 的 4 組 cron 時間依第 3 節對照表設定完成（UTC）
 - [x] YouTube 端建立「YT-AutoPublish 待發布佇列」與「YT-AutoPublish 已發布紀錄」兩個專用播放清單（刻意不沿用頻道原有、內容已公開的「待發布」/「已發布」分類清單，避免搞混）
-- [x] 確認往後上傳影片凡要進佇列一律先設為 **Unlisted**
+- [x] 確認往後上傳影片凡要進佇列一律先設為 **Unlisted 或 Private 皆可**（2026-10-05 起，見下方「部署實測踩到的坑」說明），唯一不能是 **Public**
 - [x] Google Cloud OAuth 同意畫面切換為 **In Production**（須在產生 Refresh Token *之前* 完成）
 - [x] 用 Production 狀態重新產生一次 Refresh Token（`yt-auto-publish` repo 內 `scripts/get_refresh_token.py` 本機執行取得）
 - [x] LINE Messaging API：沿用既有「ChouAP.Cloud」Bot（跟 `ai-stock-weekly-report-bot` 等共用同一組 Channel Access Token），不需另外申請
