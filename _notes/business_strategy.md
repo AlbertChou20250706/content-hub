@@ -327,12 +327,26 @@ Microsoft Store（實際下載／付費頁面）
 | 時間 | Phase | 內容 | 預估工作量 |
 |---|---|---|---|
 | 2026-09-15 | Phase 0 | 選材＋技術棧確認 | 已完成 |
-| 2026-09-19 或 09-20（週末） | Phase 1 | 確認 repo 狀態、Claude GitHub App 推送權限、釐清 `PXE` vs `PXE_TFTP_GUI_Windows` 現役版本 | ~15 分鐘 |
-| 2026-09-26～27（週末） | **Phase 2（新路線，首次實測）** | Nuitka／PyInstaller 打包成 exe——全新未驗證路線，抓一整天餘裕，預期會踩坑 | 半天～一天 |
-| 2026-09-30（三）晚上 | Phase 3 | 隱私政策頁沿用 `OT Calculator` 模板修改 | ~15 分鐘 |
-| 2026-10-03～04（週末） | Phase 4＋5 | 研究 exe → MSIX 封裝方式（PWA Builder 不適用，需換工具）＋本機安裝測試 | 半天 |
-| 2026-10-10～11（週末） | Phase 6 | Partner Center 送審 | 半天 |
+| 2026-09-19 或 09-20（週末） | Phase 1 | 確認 repo 狀態、Claude GitHub App 推送權限、釐清 `PXE` vs `PXE_TFTP_GUI_Windows` 現役版本 | ⚠️ 未確認是否完成，見下方「實際執行紀錄」 |
+| 2026-09-26～27（週末） | **Phase 2（新路線，首次實測）** | Nuitka／PyInstaller 打包成 exe——全新未驗證路線，抓一整天餘裕，預期會踩坑 | ✅ 已完成（2026-10-17），見下方 |
+| 2026-09-30（三）晚上 | Phase 3 | 隱私政策頁沿用 `OT Calculator` 模板修改 | ⚠️ 未確認是否完成 |
+| 2026-10-03～04（週末） | Phase 4＋5 | 研究 exe → MSIX 封裝方式（PWA Builder 不適用，需換工具）＋本機安裝測試 | ✅ 已完成（2026-10-17），見下方 |
+| 2026-10-10～11（週末） | Phase 6 | Partner Center 送審 | 尚未開始 |
 | 送審後 1～3 個工作日 | Phase 7 | 等審核信、確認上架 | 等待，無主動工作量 |
-| 2026-10-17～18（週末） | Phase 8 | `content-hub` 三件套、README／`publish_log.md` 回填；影片／社群貼文視 Albert 時間，非必要卡點 | 半天，影片另計 |
+| 2026-10-17～18（週末） | Phase 8 | `content-hub` 三件套、README／`publish_log.md` 回填；影片／社群貼文視 Albert 時間，非必要卡點 | 尚未開始 |
 
 Phase 2、4 是沒驗證過的新路線，日期抓得比較寬鬆，卡關可以順延，不追求跟 `OT Calculator` 首次試點一樣的天天推進節奏。
+
+### 實際執行紀錄：Phase 2＋4＋5 由每日檢查 session 直接動手完成（2026-10-17，Albert 直接指示）
+
+`tool-maintenance-digest`／`daily-tool-digest` 模式衍生出的「每日打包前檢查」自動化（`session_013q2MPdq6492k3iJaJC2DyC`，跑在 `Scrip_application` 雲端環境），原本規劃是「只檢查、不動手」，且應該在 Phase 2 開始前（9/26）停止。實際狀況：
+
+- **沒有依約在 9/26 停止**，一路跑到 2026-10-17（多跑超過三週）才被發現並暫停
+- **2026-10-17 當天，Albert 直接指示該 session 動手執行**（不是自動化自主決定），實際完成了：
+  - Nuitka／PyInstaller 打包成 exe（Phase 2）
+  - exe → MSIX 封裝＋自我簽署 self-signed signing（Phase 4）
+  - 本機安裝＋啟動 smoke test，結果 pass（Phase 5）
+  - 結果記錄在該環境內的 `pxe_precheck_2026-10-17_phase2.md`（詳細內容尚未拉回 `content-hub` 這邊，需要時再去那個 session 取）
+- **累積花費 US$206.21**（整個 session 從 9/15 到 10/17 的每日檢查＋10/17 當次的實際打包動作加總），遠超過原本「輕量每日檢查」的預期量級，供之後抓同類自動化的成本規模參考
+- **Phase 1、Phase 3 完成狀態未知**：`PXE` vs `PXE_TFTP_GUI_Windows` 現役版本釐清（Phase 1）、隱私政策頁（Phase 3）都還沒有明確完成紀錄，不確定是在這次打包過程中一併處理掉了、還是被跳過——下次接續時需要先確認
+- 每日檢查 routine（`trig_016CYpEGf2SrFKsYLBNbFbCi`）已於 2026-10-18 暫停，不會再自動執行
