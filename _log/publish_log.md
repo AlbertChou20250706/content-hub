@@ -32,4 +32,10 @@
 | 2026-10-08 | ChouAP Tunes：技術轉唱歌／音樂獨立子品牌線規劃 | 第 6 首《沒睡著的那一顆》（CPU 閒置巡檢工具改編）公開上架 | https://youtu.be/FucwR4sI2xM | 延續「每 48 小時公開 1 首」排程，原定台灣時間 02:30，實際 07:13 轉為公開並加進「ChouAP Tunes｜全部歌曲」；依 `yt-auto-publish` manifest 的 `released_at` 回填，開場留言由程式自動貼上，釘選仍為人工步驟。下一首（第 7 首）預計 10/10 凌晨 |
 | 2026-10-10 | ChouAP Tunes：技術轉唱歌／音樂獨立子品牌線規劃 | 第 7 首《記憶輪迴》（SIT 輪迴測試改編）公開上架 | https://youtu.be/Bq72EPgS9Lw | 延續「每 48 小時公開 1 首」排程，原定台灣時間 02:30，實際 06:47 轉為公開並加進「ChouAP Tunes｜全部歌曲」；依 `yt-auto-publish` manifest 的 `released_at` 回填。下一首（第 8 首）預計 10/12 凌晨 |
 | 2026-10-12 | ChouAP Tunes：技術轉唱歌／音樂獨立子品牌線規劃 | 第 8 首《看門狗》（cleanboot 開機清理腳本改編）公開上架 | https://youtu.be/dqXvHTLoK2Y | 延續「每 48 小時公開 1 首」排程，原定台灣時間 02:30，實際 06:13 轉為公開並加進「ChouAP Tunes｜全部歌曲」；依 `yt-auto-publish` manifest 的 `released_at` 回填；第 5～8 首（10/5 核准佇列的四首）至此全數公開完畢 |
+| 2026-10-20 | 二十秒的間歇｜AI創作歌曲·改編自Tabata間歇計時器重寫 | YouTube 上架（ChouAP Tunes 第 9 首） | https://youtu.be/kMF0ifXxPFA | 僅記錄公開連結 |
+| 2026-10-21 | 免責聲明｜AI創作歌曲·改編自AI股市週報LINE Bot | YouTube 上架（ChouAP Tunes 第 10 首） | https://youtu.be/ZOhTjP-HFQA | 僅記錄公開連結 |
+| 2026-10-22 | 高壓負載｜AI創作歌曲·改編自網卡吞吐量與RDMA頻寬驗證 | YouTube 上架（ChouAP Tunes 第 11 首） | https://youtu.be/8iWyNJjWZNU | 僅記錄公開連結 |
+| 2026-10-23 | 鑰匙｜AI創作歌曲·改編自Windows Server 無人值守自動登入 | YouTube 上架（ChouAP Tunes 第 13 首） | https://youtu.be/S_mO-DQuYmw | 僅記錄公開連結 |
+| 2026-10-24 | 等你說收到｜AI創作歌曲·改編自PXE 開機的 TFTP 伺服器 | YouTube 上架（ChouAP Tunes 第 14 首） | https://youtu.be/cQqyGlYbjgo | 僅記錄公開連結 |
+| 2026-10-25 | 邁向日出｜AI創作歌曲·改編自Prime95 互動式壓力測試腳本 | YouTube 上架（ChouAP Tunes 第 15 首） | https://youtu.be/MbVHSIlRlBk | 僅記錄公開連結 |
 | 2026-10-26 | 還來得及｜AI創作歌曲·改編自LVM 資料碟自動初始化工具 | YouTube 上架（ChouAP Tunes 第 16 首） | https://youtu.be/IyoAZaB6_QE | 僅記錄公開連結 |
