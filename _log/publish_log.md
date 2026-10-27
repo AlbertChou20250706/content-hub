@@ -39,3 +39,4 @@
 | 2026-10-24 | 等你說收到｜AI創作歌曲·改編自PXE 開機的 TFTP 伺服器 | YouTube 上架（ChouAP Tunes 第 14 首） | https://youtu.be/cQqyGlYbjgo | 僅記錄公開連結 |
 | 2026-10-25 | 邁向日出｜AI創作歌曲·改編自Prime95 互動式壓力測試腳本 | YouTube 上架（ChouAP Tunes 第 15 首） | https://youtu.be/MbVHSIlRlBk | 僅記錄公開連結 |
 | 2026-10-26 | 還來得及｜AI創作歌曲·改編自LVM 資料碟自動初始化工具 | YouTube 上架（ChouAP Tunes 第 16 首） | https://youtu.be/IyoAZaB6_QE | 僅記錄公開連結 |
+| 2026-10-27 | 第七圈｜AI創作歌曲·改編自CPU 降速日誌分析工具（LoopCpuMap） | YouTube 上架（ChouAP Tunes 第 12 首） | https://youtu.be/xnsEtGhj4Ig | 僅記錄公開連結 |
