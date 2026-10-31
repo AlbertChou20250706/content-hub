@@ -40,3 +40,7 @@
 | 2026-10-25 | 邁向日出｜AI創作歌曲·改編自Prime95 互動式壓力測試腳本 | YouTube 上架（ChouAP Tunes 第 15 首） | https://youtu.be/MbVHSIlRlBk | 僅記錄公開連結 |
 | 2026-10-26 | 還來得及｜AI創作歌曲·改編自LVM 資料碟自動初始化工具 | YouTube 上架（ChouAP Tunes 第 16 首） | https://youtu.be/IyoAZaB6_QE | 僅記錄公開連結 |
 | 2026-10-27 | 第七圈｜AI創作歌曲·改編自CPU 降速日誌分析工具（LoopCpuMap） | YouTube 上架（ChouAP Tunes 第 12 首） | https://youtu.be/xnsEtGhj4Ig | 僅記錄公開連結 |
+| 2026-10-28 | 再來一次｜AI創作歌曲·改編自RAID 重開機一致性檢查 | YouTube 上架（ChouAP Tunes 第 17 首） | https://youtu.be/UyocsJUkLsc | 僅記錄公開連結 |
+| 2026-10-29 | 重新開始｜AI創作歌曲·改編自NVMe SSD 韌體更新工具 | YouTube 上架（ChouAP Tunes 第 18 首） | https://youtu.be/6nWX6NQNkNg | 僅記錄公開連結 |
+| 2026-10-30 | 真假之間｜AI創作歌曲·改編自儲存裝置壓力測試（Storage Stress） | YouTube 上架（ChouAP Tunes 第 19 首） | https://youtu.be/FHAW2dxgOUQ | 僅記錄公開連結 |
+| 2026-10-31 | 結果保證｜AI創作歌曲·改編自CPU壓力測試的三段式降級工具 | YouTube 上架（ChouAP Tunes 第 20 首） | https://youtu.be/5uXBdtP-VI4 | 僅記錄公開連結 |
