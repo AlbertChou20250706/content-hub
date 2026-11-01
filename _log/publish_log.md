@@ -44,3 +44,4 @@
 | 2026-10-29 | 重新開始｜AI創作歌曲·改編自NVMe SSD 韌體更新工具 | YouTube 上架（ChouAP Tunes 第 18 首） | https://youtu.be/6nWX6NQNkNg | 僅記錄公開連結 |
 | 2026-10-30 | 真假之間｜AI創作歌曲·改編自儲存裝置壓力測試（Storage Stress） | YouTube 上架（ChouAP Tunes 第 19 首） | https://youtu.be/FHAW2dxgOUQ | 僅記錄公開連結 |
 | 2026-10-31 | 結果保證｜AI創作歌曲·改編自CPU壓力測試的三段式降級工具 | YouTube 上架（ChouAP Tunes 第 20 首） | https://youtu.be/5uXBdtP-VI4 | 僅記錄公開連結 |
+| 2026-11-01 | 不能重來｜AI創作歌曲·改編自一次性熔絲燒錄的先驗再燒流程 | YouTube 上架（ChouAP Tunes 第 21 首） | https://youtu.be/OAsa7wrpv7o | 僅記錄公開連結 |
