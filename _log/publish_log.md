@@ -45,3 +45,6 @@
 | 2026-10-30 | 真假之間｜AI創作歌曲·改編自儲存裝置壓力測試（Storage Stress） | YouTube 上架（ChouAP Tunes 第 19 首） | https://youtu.be/FHAW2dxgOUQ | 僅記錄公開連結 |
 | 2026-10-31 | 結果保證｜AI創作歌曲·改編自CPU壓力測試的三段式降級工具 | YouTube 上架（ChouAP Tunes 第 20 首） | https://youtu.be/5uXBdtP-VI4 | 僅記錄公開連結 |
 | 2026-11-01 | 不能重來｜AI創作歌曲·改編自一次性熔絲燒錄的先驗再燒流程 | YouTube 上架（ChouAP Tunes 第 21 首） | https://youtu.be/OAsa7wrpv7o | 僅記錄公開連結 |
+| 2026-11-02 | 它換了名字｜AI創作歌曲·改編自網卡 RDMA 驅動安裝腳本的除錯 | YouTube 上架（ChouAP Tunes 第 22 首） | https://youtu.be/5PydA4MvHag | 僅記錄公開連結 |
+| 2026-11-03 | 先別看（Don't Peek Yet）｜AI創作歌曲·改編自寫入記憶體 SPD 的兩步工具 | YouTube 上架（ChouAP Tunes 第 23 首） | https://youtu.be/U7srFOQ956E | 僅記錄公開連結 |
+| 2026-11-04 | 瓦數不說謊（Watts Don't Lie）｜AI創作歌曲·改編自插滿硬碟的極限測試驗證 | YouTube 上架（ChouAP Tunes 第 24 首） | https://youtu.be/On5o2-11I9k | 僅記錄公開連結 |
