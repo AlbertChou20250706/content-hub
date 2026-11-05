@@ -48,3 +48,4 @@
 | 2026-11-02 | 它換了名字｜AI創作歌曲·改編自網卡 RDMA 驅動安裝腳本的除錯 | YouTube 上架（ChouAP Tunes 第 22 首） | https://youtu.be/5PydA4MvHag | 僅記錄公開連結 |
 | 2026-11-03 | 先別看（Don't Peek Yet）｜AI創作歌曲·改編自寫入記憶體 SPD 的兩步工具 | YouTube 上架（ChouAP Tunes 第 23 首） | https://youtu.be/U7srFOQ956E | 僅記錄公開連結 |
 | 2026-11-04 | 瓦數不說謊（Watts Don't Lie）｜AI創作歌曲·改編自插滿硬碟的極限測試驗證 | YouTube 上架（ChouAP Tunes 第 24 首） | https://youtu.be/On5o2-11I9k | 僅記錄公開連結 |
+| 2026-11-05 | 一切歸零（Reset to Zero）｜AI創作歌曲·改編自 GPU 認證測試無故重開機的排查故事 | YouTube 上架（ChouAP Tunes 第 25 首） | https://youtu.be/yqv3a6RnNDI | 僅記錄公開連結 |
