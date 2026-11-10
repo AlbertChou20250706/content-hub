@@ -44,6 +44,13 @@ Albert.Chou
 - **屬性：輕量候選池，不是正式主題**——不需要 `README.md`、`youtube_metadata.md`、`social_posts.md`，也不需要回填 `_log/publish_log.md`
 - 一樣受本檔案「內容規範」的總規範約束（見下方）
 
+## `notes/` — 輕量技術筆記（獨立於 `topics/` 之外的頂層分類）
+
+- **不是 `topics/` 的子項目**：`notes/<YYYY-MM-DD>_<slug>/README.md` 跟 `topics/` 是平行的頂層分類，不套用上面「新增主題的標準流程」那一套規則
+- **用途**：個人技術筆記、詞彙對照、心得整理等不打算做成影片的內容（例如 AI 專有名詞對照、工具用法筆記）
+- **屬性：輕量筆記，不是正式主題**——不需要 `youtube_metadata.md`、`social_posts.md`，也不需要回填 `_log/publish_log.md`；只要一份 `README.md` 說清楚內容即可
+- 一樣受本檔案「內容規範」的總規範約束（見下方）
+
 ## `_log/publish_log.md` 是發布歷史的唯一真實來源
 
 - 每次新主題**發布完成**（YouTube 上架、social post 發出等動作），都要在 `_log/publish_log.md` 補一筆紀錄
