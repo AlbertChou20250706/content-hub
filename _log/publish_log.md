@@ -51,3 +51,4 @@
 | 2026-11-05 | 一切歸零（Reset to Zero）｜AI創作歌曲·改編自 GPU 認證測試無故重開機的排查故事 | YouTube 上架（ChouAP Tunes 第 25 首） | https://youtu.be/yqv3a6RnNDI | 僅記錄公開連結 |
 | 2026-11-06 | 假警報（False Alarm）｜AI創作歌曲·改編自雙平台系統健檢機器人 | YouTube 上架（ChouAP Tunes 第 26 首） | https://youtu.be/4Vi1kcTNOlI | 僅記錄公開連結 |
 | 2026-11-09 | 跑幾趟都一樣（Same Result Every Run）｜AI創作歌曲·改編自 Hyper-V 主機三階段建置腳本 | YouTube 上架（ChouAP Tunes 第 27 首） | https://youtu.be/1pQkk1XpCC0 | 僅記錄公開連結 |
+| 2026-11-11 | 二次密碼（Second Password）｜AI創作歌曲·改編自伺服器帶外檢測與密碼防護機制 | YouTube 上架（ChouAP Tunes 第 28 首） | https://youtu.be/JXJRHRpYOwQ | 僅記錄公開連結 |
