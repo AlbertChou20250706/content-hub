@@ -54,3 +54,5 @@
 | 2026-11-11 | 二次密碼（Second Password）｜AI創作歌曲·改編自伺服器帶外檢測與密碼防護機制 | YouTube 上架（ChouAP Tunes 第 28 首） | https://youtu.be/JXJRHRpYOwQ | 僅記錄公開連結 |
 | 2026-11-12 | 魔術封包（Magic Packet）｜AI創作歌曲·改編自 Wake-on-LAN 網路遠端喚醒排查 | YouTube 上架（ChouAP Tunes 第 29 首） | https://youtu.be/3u34hOEDU5Q | 僅記錄公開連結 |
 | 2026-11-13 | 唯一位址（Unique Address）｜AI創作歌曲·改編自網卡 MAC 位址燒錄與校驗 | YouTube 上架（ChouAP Tunes 第 30 首） | https://youtu.be/Hlmz0IooSmc | 僅記錄公開連結 |
+| 2026-11-16 | 波特率（Baud Rate）｜AI創作歌曲·改編自串口主控台的波特率對齊 | YouTube 上架（ChouAP Tunes 第 31 首） | https://youtu.be/8mGWolieY2A | 僅記錄公開連結 |
+| 2026-11-16 | 玉峰的靠山（競選歌曲，完整標題見影片） | YouTube 上架（ChouAP Tunes 第 37 首） | https://youtu.be/CWZFjEVtiz8 | 僅記錄公開連結；真實選舉的候選人專屬歌曲，這裡不寫人名與號次 |
