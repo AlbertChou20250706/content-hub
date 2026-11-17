@@ -17,6 +17,8 @@ SIT 驗證與自動化實戰的公開紀錄庫 —— 技術工作 → GitHub �
 ```
 content-hub/
 ├── topics/       每個主題一個資料夾：YYYY-MM-DD_主題slug/
+├── daily-tools/  每日工具挖掘候選池（輕量，YYYY-MM-DD_slug/source.md）
+├── notes/        輕量技術筆記（YYYY-MM-DD_slug/README.md，不做成影片）
 ├── _templates/   發布用範本（README／腳本／metadata／社群貼文／交接 prompt）
 └── _log/         發布歷史紀錄
 ```
