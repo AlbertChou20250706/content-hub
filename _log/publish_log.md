@@ -60,3 +60,4 @@
 | 2026-11-18 | 排除僥倖（Rule Out the Fluke）｜AI創作歌曲·改編自硬碟熱插拔檢核表 | YouTube 上架（ChouAP Tunes 第 33 首） | https://youtu.be/T0dx9GmI7SM | 僅記錄公開連結 |
 | 2026-11-19 | 你沒有走散（You Are Not Lost）｜AI創作歌曲·改編自 BMC 風扇 SKU ID 切換工具 | YouTube 上架（ChouAP Tunes 第 34 首） | https://youtu.be/9IXMg0wBxZQ | 僅記錄公開連結 |
 | 2026-11-20 | 從沒寄出（Never Sent）｜AI創作歌曲·改編自 Linux 日誌收集與清除工具組 | YouTube 上架（ChouAP Tunes 第 35 首） | https://youtu.be/QVMddcvMPwY | 僅記錄公開連結 |
+| 2026-11-23 | 擦肩而過（Brush Past）｜AI創作歌曲·改編自 BMC 與 BIOS 設定對齊工具 | YouTube 上架（ChouAP Tunes 第 36 首） | https://youtu.be/4zw_v4zFa3w | 僅記錄公開連結 |
