@@ -62,3 +62,4 @@
 | 2026-11-20 | 從沒寄出（Never Sent）｜AI創作歌曲·改編自 Linux 日誌收集與清除工具組 | YouTube 上架（ChouAP Tunes 第 35 首） | https://youtu.be/QVMddcvMPwY | 僅記錄公開連結 |
 | 2026-11-23 | 擦肩而過（Brush Past）｜AI創作歌曲·改編自 BMC 與 BIOS 設定對齊工具 | YouTube 上架（ChouAP Tunes 第 36 首） | https://youtu.be/4zw_v4zFa3w | 僅記錄公開連結 |
 | 2026-11-24 | 空著等待（Left Waiting）｜AI創作歌曲·改編自 ESXi 評估授權重置工具 | YouTube 上架（ChouAP Tunes 第 38 首） | https://youtu.be/WyLQs2UTjDQ | 僅記錄公開連結 |
+| 2026-11-25 | 倒帶（Rewind）｜AI創作歌曲·改編自資料碟初始化與還原工具 | YouTube 上架（ChouAP Tunes 第 39 首） | https://youtu.be/Wyzli8kPWVM | 僅記錄公開連結 |
